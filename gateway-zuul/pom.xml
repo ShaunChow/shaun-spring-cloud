@@ -4,18 +4,33 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.shaun.micro-serive</groupId>
-		<artifactId>bus-micro-service</artifactId>
+		<groupId>com.shaun</groupId>
+		<artifactId>spring-cloud</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.shaun.micro-service</groupId>
-	<artifactId>micro-service-ii</artifactId>
+	<groupId>com.shaun.gateway</groupId>
+	<artifactId>gateway-zuul</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>micro-service-ii</name>
-	<description>Business Server for Spring Boot</description>
+	<name>gateway-zuul</name>
+	<description>Gateway for Spring Boot</description>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

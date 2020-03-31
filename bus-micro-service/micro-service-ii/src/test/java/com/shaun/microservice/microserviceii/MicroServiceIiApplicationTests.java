@@ -1,10 +1,10 @@
-package com.shaun.microservicei;
+package com.shaun.microservice.microserviceii;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MicroServiceIApplicationTests {
+class MicroServiceIiApplicationTests {
 
 	@Test
 	void contextLoads() {

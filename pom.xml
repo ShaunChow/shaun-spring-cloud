@@ -20,7 +20,7 @@
 
 	<modules>
 		<module>eureka-server</module>
-		<module>micro-service-i</module>
+		<module>bus-micro-service</module>
 	</modules>
 
 	<properties>

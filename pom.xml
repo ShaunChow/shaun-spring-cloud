@@ -22,6 +22,7 @@
 		<module>eureka-server</module>
 		<module>bus-micro-service</module>
 		<module>gateway-zuul</module>
+		<module>dashboard</module>
 	</modules>
 
 	<properties>

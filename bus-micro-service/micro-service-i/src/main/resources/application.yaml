@@ -3,6 +3,10 @@ spring:
   application:
     name: micro-service-i
 
+  datasource:
+    schema: classpath:database/schema-h2.sql
+    data: classpath:database/data-h2.sql
+
 server:
   port: 8801
 

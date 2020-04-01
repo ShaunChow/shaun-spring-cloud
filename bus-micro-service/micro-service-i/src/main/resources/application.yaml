@@ -31,3 +31,8 @@ logging:
     root: info
   file:
     name: logs/${spring.application.name}.log
+
+
+feign:
+  hystrix:
+    enabled: true

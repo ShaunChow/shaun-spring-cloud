@@ -9,16 +9,16 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>hystrix-dashboard</artifactId>
+	<artifactId>admin-dashboard</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>hystrix-dashboard</name>
-	<description>Hystrix Dashboard for Spring Cloud</description>
+	<name>admin-dashboard</name>
+	<description>Admin Dashboard for Spring Cloud</description>
 
 	<dependencies>
 
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-server</artifactId>
 		</dependency>
 
 		<dependency>

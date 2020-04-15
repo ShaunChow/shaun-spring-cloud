@@ -35,6 +35,11 @@
 			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
+
 <!--		<dependency>-->
 <!--			<groupId>com.baomidou</groupId>-->
 <!--			<artifactId>mybatis-plus-boot-starter</artifactId>-->

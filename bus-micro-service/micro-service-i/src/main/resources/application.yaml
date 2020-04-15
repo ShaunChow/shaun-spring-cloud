@@ -4,8 +4,19 @@ spring:
     name: micro-service-i
 
   datasource:
+    initialization-mode: embedded
     schema: classpath:database/schema-h2.sql
     data: classpath:database/data-h2.sql
+    platform: all
+
+  liquibase:
+    enabled: true
+
+#mybatis:
+#  type-aliases-package: com.shaun.microservice.microservicei.entity
+#  mapper-locations: classpath:/com.shaun.microservice.microservicei/mapper/*
+#  configuration:
+#    mapUnderscoreToCamelCase: true
 
 server:
   port: 8801

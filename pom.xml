@@ -29,6 +29,7 @@
 		<java.version>1.8</java.version>
 		<spring-cloud.version>Hoxton.SR3</spring-cloud.version>
 		<spring-boot-admin.version>2.2.1</spring-boot-admin.version>
+		<apache.camel.version>3.2.0</apache.camel.version>
 	</properties>
 
 	<dependencyManagement>
@@ -46,6 +47,15 @@
 				<groupId>de.codecentric</groupId>
 				<artifactId>spring-boot-admin-dependencies</artifactId>
 				<version>${spring-boot-admin.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- Camel BOM -->
+			<dependency>
+				<groupId>org.apache.camel.springboot</groupId>
+				<artifactId>camel-spring-boot-dependencies</artifactId>
+				<version>${apache.camel.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

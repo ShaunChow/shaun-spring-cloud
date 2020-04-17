@@ -23,6 +23,7 @@
 		<module>bus-micro-service</module>
 		<module>gateway-zuul</module>
 		<module>dashboard</module>
+		<module>user-account-authentication</module>
 	</modules>
 
 	<properties>

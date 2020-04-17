@@ -9,7 +9,7 @@ public class RestRouter extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        from("timer:hello?period={{timer.period}}").routeId("hello").routeGroup("hello-group")
+        from("timer://system?period={{timer.period}}").routeId("hello").routeGroup("hello-group")
                 .transform().method("myBean", "saySomething")
                 .filter(simple("${body} contains 'foo'"))
                 .to("log:foo")

@@ -48,6 +48,9 @@ management:
   endpoint:
     health:
       show-details: always
+hawtio:
+  authenticationEnabled: false
+
 
 logging:
   level:

@@ -13,6 +13,13 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    public static final String DEF_GROUP_AUTHORITIES_BY_USERNAME_QUERY =
+            "select g.id, g.group_name, ga.authority " +
+                    "from groups g, group_members gm, group_authorities ga " +
+                    "where gm.username = ? " +
+                    "and g.id = ga.group_id " +
+                    "and g.id = gm.group_id";
+
     private final DataSource dataSource;
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -27,7 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder)
                 .withUser(
                         User.withUsername("admin").password(passwordEncoder.encode("admin")).roles("ADMIN")
-                );  // default Super User
+                )   // default Super User
+                .groupAuthoritiesByUsername(DEF_GROUP_AUTHORITIES_BY_USERNAME_QUERY);  // enable groups
     }
 
     @Override

@@ -1,11 +1,17 @@
 package com.shaun.useraccountauthentication.springsecurity.config;
 
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.provisioning.JdbcUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.sql.DataSource;
@@ -13,15 +19,7 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String DEF_GROUP_AUTHORITIES_BY_USERNAME_QUERY =
-            "select g.id, g.group_name, ga.authority " +
-                    "from groups g, group_members gm, group_authorities ga " +
-                    "where gm.username = ? " +
-                    "and g.id = ga.group_id " +
-                    "and g.id = gm.group_id";
-
     private final DataSource dataSource;
-
     private final BCryptPasswordEncoder passwordEncoder;
 
     public WebSecurityConfig(DataSource dataSource, BCryptPasswordEncoder passwordEncoder) {
@@ -31,11 +29,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder)
+        JdbcUserDetailsManagerConfigurer<AuthenticationManagerBuilder> cfg
+                = auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder)
                 .withUser(
                         User.withUsername("admin").password(passwordEncoder.encode("admin")).roles("ADMIN")
-                )   // default Super User
-                .groupAuthoritiesByUsername(DEF_GROUP_AUTHORITIES_BY_USERNAME_QUERY);  // enable groups
+                );   // default Super User
+
+        cfg.getUserDetailsService().setEnableGroups(true);  // enable groups
     }
 
     @Override
@@ -47,5 +47,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable();
     } // @formatter:on
 
+    @Override
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
+    @Override
+    @Bean(BeanIds.USER_DETAILS_SERVICE)
+    public UserDetailsService userDetailsServiceBean() throws Exception {
+        return super.userDetailsServiceBean();
+    }
 }

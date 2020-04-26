@@ -18,6 +18,17 @@ spring:
     data: classpath:database/data-h2.sql
     platform: all
 
+#security:
+#  oauth2:
+#    client:
+#      client-id: appclient
+#      client-secret: admin
+#    resource:
+#      id: carInventory
+#      token-info-uri: http://localhost:8781/oauth/check_token
+
+
+
 eureka:
   client:
     service-url:

@@ -24,7 +24,7 @@ security:
       client-id: appclient
       client-secret: admin
     resource:
-      id: carInventory
+      id: product_api
       token-info-uri: http://localhost:8781/oauth/check_token
 
 logging:

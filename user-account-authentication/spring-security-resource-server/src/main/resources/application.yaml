@@ -1,0 +1,49 @@
+server:
+  port: 8782
+
+spring:
+  application:
+    name: uaa-spring-security-resource
+
+  h2: # default : jdbc:h2:mem:testdb
+    console:
+      path: /h2-console
+      enabled: true
+      settings:
+        web-allow-others: true
+
+  datasource:
+    initialization-mode: embedded
+    schema: classpath:database/schema-h2.sql
+    data: classpath:database/data-h2.sql
+    platform: all
+
+security:
+  oauth2:
+    client:
+      client-id: appclient
+      client-secret: admin
+    resource:
+      id: carInventory
+      token-info-uri: http://localhost:8781/oauth/check_token
+
+logging:
+  level:
+    root: info
+    org.springframework.security: debug
+  file:
+    name: logs/${spring.application.name}.log
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 5
+    enabled: false
+  instance:
+    lease-expiration-duration-in-seconds: 15
+    lease-renewal-interval-in-seconds: 5
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}

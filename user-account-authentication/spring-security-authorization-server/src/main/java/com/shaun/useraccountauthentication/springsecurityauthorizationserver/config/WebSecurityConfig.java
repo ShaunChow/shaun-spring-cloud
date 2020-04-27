@@ -1,4 +1,4 @@
-package com.shaun.useraccountauthentication.springsecurity.config;
+package com.shaun.useraccountauthentication.springsecurityauthorizationserver.config;
 
 
 import org.springframework.context.annotation.Bean;

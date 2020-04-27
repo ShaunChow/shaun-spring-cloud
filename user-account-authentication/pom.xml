@@ -17,7 +17,6 @@
     <description>Dashboard for Spring Cloud</description>
 
     <modules>
-        <module>spring-security</module>
         <module>spring-security-authorization-server</module>
         <module>spring-security-resource-server</module>
     </modules>

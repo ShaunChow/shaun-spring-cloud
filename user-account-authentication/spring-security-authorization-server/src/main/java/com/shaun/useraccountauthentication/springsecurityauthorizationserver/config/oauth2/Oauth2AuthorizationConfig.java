@@ -1,4 +1,4 @@
-package com.shaun.useraccountauthentication.springsecurity.config.oauth2;
+package com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

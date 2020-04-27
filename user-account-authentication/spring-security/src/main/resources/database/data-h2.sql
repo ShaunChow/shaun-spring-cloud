@@ -38,7 +38,7 @@ INSERT INTO oauth_client_details VALUES (
     'product_api',
     '$2a$10$bcy1p7wpkwZZ6o8MfNWVEe0/HAuL6dmqIJ11rYRmwFOnBjj/Pf54q',
     'read,write',
-    'authorization_code,,check_token,refresh_token,password',
+    'authorization_code,check_token,refresh_token,password',
     'http://localhost:8781/oauth2/code',
     'ROLE_PRODUCT_ADMIN',
     7200,

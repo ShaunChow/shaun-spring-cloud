@@ -1,4 +1,7 @@
 
+server:
+  port: 8801
+
 spring:
   application:
     name: micro-service-i
@@ -18,27 +21,12 @@ spring:
 #  configuration:
 #    mapUnderscoreToCamelCase: true
 
-server:
-  port: 8801
-
 camel:
   springboot:
     name: camel-service-i
 greeting: Hello World
 
 timer.period: 2000
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-    registry-fetch-interval-seconds: 5
-    enabled: false
-  instance:
-    lease-expiration-duration-in-seconds: 15
-    lease-renewal-interval-in-seconds: 5
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${random.int}
 
 management:
   endpoints:
@@ -62,3 +50,15 @@ logging:
 feign:
   hystrix:
     enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    registry-fetch-interval-seconds: 5
+    enabled: false
+  instance:
+    lease-expiration-duration-in-seconds: 15
+    lease-renewal-interval-in-seconds: 5
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.int}

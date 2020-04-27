@@ -27,7 +27,12 @@ spring:
 #      id: carInventory
 #      token-info-uri: http://localhost:8781/oauth/check_token
 
-
+logging:
+  level:
+    root: info
+    org.springframework.security: debug
+  file:
+    name: logs/${spring.application.name}.log
 
 eureka:
   client:

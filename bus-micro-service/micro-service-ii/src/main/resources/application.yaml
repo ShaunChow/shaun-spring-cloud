@@ -1,4 +1,7 @@
 
+server:
+  port: 8802
+
 spring:
   application:
     name: micro-service-ii
@@ -8,20 +11,6 @@ spring:
     schema: classpath:database/schema-h2.sql
     data: classpath:database/data-h2.sql
     platform: all
-server:
-  port: 8802
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-    registry-fetch-interval-seconds: 5
-    enabled: false
-  instance:
-    lease-expiration-duration-in-seconds: 15
-    lease-renewal-interval-in-seconds: 5
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${random.int}
 
 management:
   endpoints:
@@ -37,3 +26,15 @@ logging:
     root: info
   file:
     name: logs/${spring.application.name}.log
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    registry-fetch-interval-seconds: 5
+    enabled: false
+  instance:
+    lease-expiration-duration-in-seconds: 15
+    lease-renewal-interval-in-seconds: 5
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.int}

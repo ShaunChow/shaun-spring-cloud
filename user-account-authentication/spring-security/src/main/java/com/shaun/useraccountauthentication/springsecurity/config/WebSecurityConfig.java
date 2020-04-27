@@ -1,7 +1,6 @@
 package com.shaun.useraccountauthentication.springsecurity.config;
 
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;

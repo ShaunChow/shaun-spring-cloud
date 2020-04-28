@@ -42,6 +42,7 @@ CREATE TABLE `group_members` (
 
 ---- Spring Oauth2 ----
 
+/* 1. client server store */
 DROP TABLE IF EXISTS `oauth_client_token`;
 CREATE TABLE `oauth_client_token` (
   `token_id` varchar(255),
@@ -51,6 +52,7 @@ CREATE TABLE `oauth_client_token` (
   `client_id` varchar(255)
 );
 
+/* 2. authorization server config store */
 DROP TABLE IF EXISTS `oauth_client_details`;
 CREATE TABLE `oauth_client_details` (
   `client_id` varchar(255) NOT NULL,
@@ -66,6 +68,7 @@ CREATE TABLE `oauth_client_details` (
   `autoapprove` varchar(255) DEFAULT NULL
 );
 
+/* 3. authorization server token store */
 DROP TABLE IF EXISTS `oauth_access_token`;
 CREATE TABLE `oauth_access_token` (
   `token_id` varchar(255),
@@ -84,6 +87,7 @@ CREATE TABLE `oauth_refresh_token`(
   `authentication` longblob
 );
 
+/* 4. authorization server - authorization_code mode - code store */
 DROP TABLE IF EXISTS `oauth_code`;
 CREATE TABLE `oauth_code` (
   `code` varchar(255),

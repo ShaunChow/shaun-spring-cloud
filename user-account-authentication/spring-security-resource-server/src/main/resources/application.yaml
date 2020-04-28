@@ -21,10 +21,10 @@ spring:
 security:
   oauth2:
     client:
-      client-id: appclient
+      client-id: pwd8781001
       client-secret: admin
     resource:
-      id: product_api
+      id: password_resource
       token-info-uri: http://localhost:8781/oauth/check_token
 
 logging:

@@ -22,37 +22,49 @@ INSERT INTO group_members(group_id,username) values (2,'user');
 ---- Spring Oauth2 ----
 
 INSERT INTO oauth_client_details VALUES (
-    'curl_client',
-    'product_api',
-    '$2a$10$5ze/vcFOsQBF1og.s.eQ0.8VdsUXh7zzul8VM0Dzcq/NKVNrD8ffO',
+    'cc8781001',
+    'client_credentials_resource',
+    '$2a$10$bcy1p7wpkwZZ6o8MfNWVEe0/HAuL6dmqIJ11rYRmwFOnBjj/Pf54q', --Bcrypt admin
     'read,write',
-    'client_credentials',
-    'http://localhost:8781/oauth2/accessToken',
-    'ROLE_PRODUCT_ADMIN',
+    'client_credentials,refresh_token',
+    null,
+    'ROLE_ADMIN,ROLE_GROUP_WRITE',
     7200,
     0,
     null,
     'true');
 INSERT INTO oauth_client_details VALUES (
-    'appclient',
-    'product_api',
+    'pwd8781001',
+    'password_resource',
     '$2a$10$bcy1p7wpkwZZ6o8MfNWVEe0/HAuL6dmqIJ11rYRmwFOnBjj/Pf54q', --Bcrypt admin
     'read,write',
-    'authorization_code,check_token,refresh_token,password',
-    'http://localhost:8781/oauth2/code',
-    'ROLE_PRODUCT_ADMIN',
+    'password,check_token,refresh_token',
+    null,
+    null,
     7200,
     72000,
     null,
     'true');
 INSERT INTO oauth_client_details VALUES (
-    'client_implicit',
-    'product_api',
-    '$2a$10$5ze/vcFOsQBF1og.s.eQ0.8VdsUXh7zzul8VM0Dzcq/NKVNrD8ffO',
+    'ac8781001',
+    'authorization_code_resource',
+    '$2a$10$bcy1p7wpkwZZ6o8MfNWVEe0/HAuL6dmqIJ11rYRmwFOnBjj/Pf54q', --Bcrypt admin
+    'read,write',
+    'authorization_code,check_token,refresh_token',
+    'http://localhost:8781/oauth2/callback',
+    null,
+    7200,
+    72000,
+    null,
+    'true');
+INSERT INTO oauth_client_details VALUES (
+    'imp8781001',
+    'implicit_api',
+    '$2a$10$bcy1p7wpkwZZ6o8MfNWVEe0/HAuL6dmqIJ11rYRmwFOnBjj/Pf54q', --Bcrypt admin
     'read,write',
     'implicit',
-    'http://localhost:8781/oauth2/accessToken',
-    'ROLE_PRODUCT_ADMIN',
+    'http://localhost:8781/oauth2/callback',
+    'ROLE_ADMIN,ROLE_GROUP_READ',
     7200,
     72000,
     null,

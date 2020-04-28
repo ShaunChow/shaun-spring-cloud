@@ -1,5 +1,6 @@
 package com.shaun.useraccountauthentication.springsecurityresourceserver.config.oauth2;
 
+import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
@@ -11,9 +12,17 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 @Configuration
 public class Oauth2ResourceConfig extends ResourceServerConfigurerAdapter {
 
+    private final ResourceServerProperties resource;
+
+    public Oauth2ResourceConfig(ResourceServerProperties resource) {
+        this.resource = resource;
+    }
+
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.resourceId("product_api");
+
+        resources.resourceId(this.resource.getResourceId());
+
     }
 
     @Override

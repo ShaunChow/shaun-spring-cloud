@@ -1,0 +1,43 @@
+server:
+  port: 8783
+
+spring:
+  application:
+    name: uaa-spring-security-login
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: e9104e23ec1960264538
+            client-secret: 438f3aa2a6bb05cdc3f8159238524b4f5487ad01
+        provider:
+          weixin:
+            authorization-uri: https://open.weixin.qq.com/connect/oauth2/authorize
+            token-uri: https://api.weixin.qq.com/sns/oauth2/access_token
+            user-info-uri: https://api.weixin.qq.com/sns/userinfo
+            user-name-attribute: openid
+
+
+
+logging:
+  level:
+    root: info
+    org.springframework.security: debug
+  file:
+    name: logs/${spring.application.name}.log
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+    registry-fetch-interval-seconds: 5
+    enabled: false
+  instance:
+    lease-expiration-duration-in-seconds: 15
+    lease-renewal-interval-in-seconds: 5
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}

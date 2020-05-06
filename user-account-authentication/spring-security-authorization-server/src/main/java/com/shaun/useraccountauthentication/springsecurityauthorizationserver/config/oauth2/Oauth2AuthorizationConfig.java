@@ -64,7 +64,7 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
         // This will enable /oauth/token_key access
         security.tokenKeyAccess("isAnonymous() || hasAuthority('ROLE_TRUSTED_CLIENT')");
 
-        // BCryptPasswordEncoder() is used for oauth_client_details.user_secret
+        // BCryptPasswordEncoder() is used for oauth_client_details.client_secret
         security.passwordEncoder(passwordEncoder);
     }
 

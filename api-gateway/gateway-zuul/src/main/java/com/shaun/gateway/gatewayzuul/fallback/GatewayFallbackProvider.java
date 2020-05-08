@@ -6,13 +6,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.lang.NonNullApi;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class GatewayFallbackProvider implements FallbackProvider {
@@ -25,27 +26,27 @@ public class GatewayFallbackProvider implements FallbackProvider {
         return new ClientHttpResponse() {
 
             public InputStream getBody() throws IOException {
-                Map r = new HashMap<String, Object>();
+                HashMap<String, Object> r = new HashMap<>();
                 r.put("state", "9999");
                 r.put("msg", "Service Is Broken...");
-                return new ByteArrayInputStream(new ObjectMapper().writeValueAsString(r).getBytes("UTF-8"));
+                return new ByteArrayInputStream(new ObjectMapper().writeValueAsString(r).getBytes(StandardCharsets.UTF_8));
             }
 
             public HttpHeaders getHeaders() {
                 HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+                headers.setContentType(MediaType.APPLICATION_JSON);
                 return headers;
             }
 
-            public HttpStatus getStatusCode() throws IOException {
+            public HttpStatus getStatusCode() {
                 return HttpStatus.OK;
             }
 
-            public int getRawStatusCode() throws IOException {
+            public int getRawStatusCode() {
                 return HttpStatus.OK.value();
             }
 
-            public String getStatusText() throws IOException {
+            public String getStatusText() {
                 return HttpStatus.OK.getReasonPhrase();
             }
 

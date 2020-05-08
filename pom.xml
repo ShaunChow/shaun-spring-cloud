@@ -20,8 +20,8 @@
 
 	<modules>
 		<module>eureka-server</module>
+		<module>api-gateway</module>
 		<module>bus-micro-service</module>
-		<module>gateway-zuul</module>
 		<module>dashboard</module>
 		<module>user-account-authentication</module>
 	</modules>

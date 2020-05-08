@@ -4,28 +4,17 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.shaun</groupId>
-		<artifactId>spring-cloud</artifactId>
+		<groupId>com.shaun.gateway</groupId>
+		<artifactId>api-gateway</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.shaun.gateway</groupId>
 	<artifactId>gateway-zuul</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gateway-zuul</name>
-	<description>Gateway for Spring Boot</description>
+	<description>Gateway for Spring Boot zuul</description>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -43,6 +32,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 	</dependencies>
 
 	<build>

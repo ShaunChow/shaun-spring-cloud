@@ -18,6 +18,7 @@
 
     <modules>
         <module>gateway-zuul</module>
+        <module>spring-gateway</module>
     </modules>
 
     <dependencies>

@@ -13,6 +13,15 @@ spring:
             client-id: e9104e23ec1960264538
             client-secret: 438f3aa2a6bb05cdc3f8159238524b4f5487ad01
         provider:
+# default google:
+# default github:
+# default facebook:
+# default okta:
+#         weibo:
+#         qq:
+#         dingtalk:
+#         keycloak:
+#         cloudfoundry-uaa:
           wechat:
             authorization-uri: https://open.weixin.qq.com/connect/oauth2/authorize
             token-uri: https://api.weixin.qq.com/sns/oauth2/access_token

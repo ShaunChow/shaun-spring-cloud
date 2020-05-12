@@ -34,7 +34,7 @@ logging:
   level:
     root: info
   file:
-    name: logs/${spring.application.name}.log
+    name: ./logs/${spring.application.name}.log
 
 eureka:
   client:

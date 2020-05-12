@@ -11,6 +11,7 @@ spring:
     schema: classpath:database/schema-h2.sql
     data: classpath:database/data-h2.sql
     platform: all
+    url: jdbc:h2:file:./database/h2/uaa  #h2
 
   liquibase:
     enabled: true
@@ -44,7 +45,7 @@ logging:
   level:
     root: info
   file:
-    name: logs/${spring.application.name}.log
+    name: ./logs/${spring.application.name}.log
 
 
 feign:

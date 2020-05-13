@@ -1,5 +1,6 @@
 package com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2;
 
+import com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2.tokengranter.GithubLoginTokenGranter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -90,9 +91,14 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 
     private TokenGranter tokenGranter(AuthorizationServerEndpointsConfigurer endpoints) {
 
-        ArrayList<TokenGranter> myTokenGranters = new ArrayList<>();
-        myTokenGranters.add(endpoints.getTokenGranter());
-        return new CompositeTokenGranter(myTokenGranters);
+        ArrayList<TokenGranter> tokenGranters = new ArrayList<>();
+        tokenGranters.add(endpoints.getTokenGranter());
+        tokenGranters.add(new GithubLoginTokenGranter(
+                endpoints.getTokenServices(),
+                endpoints.getClientDetailsService(),
+                endpoints.getOAuth2RequestFactory()
+        ));
+        return new CompositeTokenGranter(tokenGranters);
     }
 
 }

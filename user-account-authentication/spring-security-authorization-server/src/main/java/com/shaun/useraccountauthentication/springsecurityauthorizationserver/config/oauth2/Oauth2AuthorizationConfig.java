@@ -4,6 +4,7 @@ import com.shaun.useraccountauthentication.springsecurityauthorizationserver.con
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -70,6 +71,9 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 
         // BCryptPasswordEncoder() is used for oauth_client_details.client_secret
         security.passwordEncoder(passwordEncoder);
+
+        // AllowFormAuthenticationForClients
+        security.allowFormAuthenticationForClients();
     }
 
     @Override
@@ -87,6 +91,9 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
         endpoints.authenticationManager(authenticationManager);
         endpoints.userDetailsService(userDetailsService);
         endpoints.tokenGranter(tokenGranter(endpoints));
+
+        // Allow HttpMethod.GET
+        endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }
 
     private TokenGranter tokenGranter(AuthorizationServerEndpointsConfigurer endpoints) {

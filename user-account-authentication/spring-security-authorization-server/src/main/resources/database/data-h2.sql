@@ -70,11 +70,11 @@ INSERT INTO oauth_client_details VALUES (
     null,
     'true');
 INSERT INTO oauth_client_details VALUES (
-    'github8781001',
-    'github_login_resource',
+    'oauth8781001',
+    'oauth_login_resource',
     '$2a$10$bcy1p7wpkwZZ6o8MfNWVEe0/HAuL6dmqIJ11rYRmwFOnBjj/Pf54q', --Bcrypt admin
     'read,write',
-    'github_login,refresh_token',
+    'oauth2,refresh_token',
     null,
     'ROLE_ADMIN,ROLE_GROUP_WRITE',
     7200,

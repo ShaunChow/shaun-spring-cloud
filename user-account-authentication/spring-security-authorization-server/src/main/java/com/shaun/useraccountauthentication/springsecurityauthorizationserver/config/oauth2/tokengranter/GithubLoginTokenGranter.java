@@ -14,13 +14,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GithubLoginTokenGranter extends AbstractTokenGranter {
-    private static final String GRANT_TYPE = "github_login";
+    private static final String GRANT_TYPE = "oauth2";
 
     public GithubLoginTokenGranter(
             AuthorizationServerTokenServices tokenServices,
             ClientDetailsService clientDetailsService,
             OAuth2RequestFactory requestFactory) {
-        this(tokenServices, clientDetailsService, requestFactory, "github_login");
+        this(tokenServices, clientDetailsService, requestFactory, "oauth2");
     }
 
     protected GithubLoginTokenGranter(
@@ -34,8 +34,10 @@ public class GithubLoginTokenGranter extends AbstractTokenGranter {
     protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
         Map<String, String> parameters = new LinkedHashMap(tokenRequest.getRequestParameters());
 
-        String registrationkey = (String) parameters.get("registration_key");
-        parameters.remove("registration_key");
+        String id = parameters.get("id");
+        String name = parameters.get("name");
+        String userInfoEndpointUri = parameters.get("user-info-endpoint-uri");
+        String authorizedClientRegistrationId = parameters.get("authorized-client-registration-id");
 
         Authentication userAuth = new UsernamePasswordAuthenticationToken(
                 "admin",
@@ -48,7 +50,7 @@ public class GithubLoginTokenGranter extends AbstractTokenGranter {
             OAuth2Request storedOAuth2Request = this.getRequestFactory().createOAuth2Request(client, tokenRequest);
             return new OAuth2Authentication(storedOAuth2Request, userAuth);
         } else {
-            throw new InvalidGrantException("Could not authenticate github_login ");
+            throw new InvalidGrantException("Could not authenticate oauth2 ");
         }
     }
 }

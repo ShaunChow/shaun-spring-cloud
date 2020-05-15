@@ -7,6 +7,11 @@ spring:
 
   security:
     oauth2:
+      authorization:
+        token-url: http://localhost:8781/oauth/token
+        client-id: oauth8781001
+        client-secret: admin
+        grant-type: oauth2
       client:
         registration:
           github-login:

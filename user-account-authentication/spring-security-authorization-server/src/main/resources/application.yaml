@@ -18,6 +18,14 @@ spring:
     data: classpath:database/data-h2.sql
     platform: all
 
+  security:
+    oauth2:
+      client:
+        user-center:
+          client-id: cc8781001
+          client-secret: admin
+          access-token-uri: http://localhost:8781/oauth/token
+
 logging:
   level:
     root: info

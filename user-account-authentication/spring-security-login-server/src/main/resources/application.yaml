@@ -18,6 +18,10 @@ spring:
             provider: github
             client-id: e9104e23ec1960264538
             client-secret: 438f3aa2a6bb05cdc3f8159238524b4f5487ad01
+          keycloak-login:
+            provider: keycloak
+            client-id: spring-security
+            client-secret: ce8db355-2760-4831-81fe-49f8cd1b2c9e
 #          spring-login:
 #            provider: spring-oauth2
 #            client-id: e9104e23ec1960264538
@@ -30,7 +34,8 @@ spring:
 #         weibo:
 #         qq:
 #         dingtalk:
-#         keycloak:
+          keycloak:
+            issuer-uri: http://10.252.29.11:8080/auth/realms/spring-login
 #         cloudfoundry-uaa:
           wechat:
             authorization-uri: https://open.weixin.qq.com/connect/oauth2/authorize
@@ -48,7 +53,6 @@ spring:
 logging:
   level:
     root: info
-    org.springframework.security: debug
   file:
     name: ./logs/${spring.application.name}.log
 

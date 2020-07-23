@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SpringSecurityLoginServerApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(SpringSecurityLoginServerApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SpringSecurityLoginServerApplication.class, args);
+    }
 }

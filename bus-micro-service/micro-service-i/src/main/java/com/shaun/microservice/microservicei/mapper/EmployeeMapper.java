@@ -12,7 +12,7 @@ import java.util.List;
 public interface EmployeeMapper {
     @Insert("insert into employee(name,pwd) values " +
             "(#{name},#{pwd})")
-    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(Employee student);
 
     @Select("select * from employee")

@@ -18,6 +18,7 @@ public class UserResource {
     }
 
     static Set<String> cars = new HashSet<>();
+
     static {
         cars.add("Toyota");
         cars.add("Benz");

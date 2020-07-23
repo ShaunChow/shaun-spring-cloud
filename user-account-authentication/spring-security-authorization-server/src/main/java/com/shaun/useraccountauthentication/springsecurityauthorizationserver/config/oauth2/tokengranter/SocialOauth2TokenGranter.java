@@ -1,5 +1,10 @@
 package com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2.tokengranter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,22 +13,27 @@ import org.springframework.security.oauth2.common.exceptions.InvalidGrantExcepti
 import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class GithubLoginTokenGranter extends AbstractTokenGranter {
+public class SocialOauth2TokenGranter extends AbstractTokenGranter {
     private static final String GRANT_TYPE = "oauth2";
 
-    public GithubLoginTokenGranter(
+    private RestTemplate restTemplate;
+
+    public SocialOauth2TokenGranter(
             AuthorizationServerTokenServices tokenServices,
             ClientDetailsService clientDetailsService,
-            OAuth2RequestFactory requestFactory) {
+            OAuth2RequestFactory requestFactory,
+            RestTemplate restTemplate) {
         this(tokenServices, clientDetailsService, requestFactory, "oauth2");
+        this.restTemplate = restTemplate;
     }
 
-    protected GithubLoginTokenGranter(
+    protected SocialOauth2TokenGranter(
             AuthorizationServerTokenServices tokenServices,
             ClientDetailsService clientDetailsService,
             OAuth2RequestFactory requestFactory,
@@ -38,13 +48,23 @@ public class GithubLoginTokenGranter extends AbstractTokenGranter {
         String name = parameters.get("name");
         String userInfoEndpointUri = parameters.get("user-info-endpoint-uri");
         String authorizedClientRegistrationId = parameters.get("authorized-client-registration-id");
+        String token = parameters.get("token");
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
+            HttpEntity<Map> request = new HttpEntity<>(null, headers);
+            String response = restTemplate.exchange(userInfoEndpointUri, HttpMethod.GET, request, String.class).getBody();
+            Map<String, Object> result = new ObjectMapper().readValue(response, Map.class);
+        } catch (Exception e) {
+            throw new InvalidGrantException("Could not authenticate oauth2 :" + e.getMessage());
+        }
 
         Authentication userAuth = new UsernamePasswordAuthenticationToken(
-                "admin",
+                name,
                 "",
-                Arrays.asList(new SimpleGrantedAuthority("ROLE_GITHUB_READ")));
+                Arrays.asList(new SimpleGrantedAuthority("ROLE_OAUTH2_READ")));
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
-
 
         if (userAuth != null && userAuth.isAuthenticated()) {
             OAuth2Request storedOAuth2Request = this.getRequestFactory().createOAuth2Request(client, tokenRequest);

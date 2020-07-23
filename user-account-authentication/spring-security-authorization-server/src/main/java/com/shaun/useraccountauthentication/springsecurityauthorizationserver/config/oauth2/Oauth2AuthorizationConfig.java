@@ -1,6 +1,6 @@
 package com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2;
 
-import com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2.tokengranter.GithubLoginTokenGranter;
+import com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2.tokengranter.SocialOauth2TokenGranter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.provider.code.AuthorizationCodeServic
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -34,15 +35,19 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
 
+    private final RestTemplate restTemplate;
+
     public Oauth2AuthorizationConfig(
             DataSource dataSource,
             BCryptPasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
-            @Qualifier("org.springframework.security.userDetailsService") UserDetailsService userDetailsService) {
+            @Qualifier("org.springframework.security.userDetailsService") UserDetailsService userDetailsService,
+            RestTemplate restTemplate) {
         this.dataSource = dataSource;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
+        this.restTemplate = restTemplate;
     }
 
     @Bean
@@ -90,20 +95,23 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 
         endpoints.authenticationManager(authenticationManager);
         endpoints.userDetailsService(userDetailsService);
-        endpoints.tokenGranter(tokenGranter(endpoints));
+        endpoints.tokenGranter(tokenGranter(endpoints, restTemplate));
 
         // Allow HttpMethod.GET
         endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }
 
-    private TokenGranter tokenGranter(AuthorizationServerEndpointsConfigurer endpoints) {
+    private TokenGranter tokenGranter(
+            AuthorizationServerEndpointsConfigurer endpoints,
+            RestTemplate restTemplate) {
 
         ArrayList<TokenGranter> tokenGranters = new ArrayList<>();
         tokenGranters.add(endpoints.getTokenGranter());
-        tokenGranters.add(new GithubLoginTokenGranter(
+        tokenGranters.add(new SocialOauth2TokenGranter(
                 endpoints.getTokenServices(),
                 endpoints.getClientDetailsService(),
-                endpoints.getOAuth2RequestFactory()
+                endpoints.getOAuth2RequestFactory(),
+                restTemplate
         ));
         return new CompositeTokenGranter(tokenGranters);
     }

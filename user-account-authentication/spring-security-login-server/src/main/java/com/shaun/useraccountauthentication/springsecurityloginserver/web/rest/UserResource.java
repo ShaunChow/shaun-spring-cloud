@@ -1,15 +1,24 @@
 package com.shaun.useraccountauthentication.springsecurityloginserver.web.rest;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -38,7 +47,7 @@ public class UserResource {
 
     @GetMapping("/user")
     public Map<String, Object> user(
-            OAuth2AuthenticationToken oAuth2AuthenticationToken) {
+            OAuth2AuthenticationToken oAuth2AuthenticationToken) throws JsonProcessingException {
 
         OAuth2AuthorizedClient client = authorizedClientService
                 .loadAuthorizedClient(
@@ -51,14 +60,26 @@ public class UserResource {
         String userInfoEndpointUri = client.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUri();
 
-        return Collections.singletonMap("name",
-                "{"
-                        + "id:" + oAuth2AuthenticationToken.getPrincipal().getName() + ","
-                        + "name:" + oAuth2AuthenticationToken.getPrincipal().getAttribute("name") + ","
-                        + "token:" + tokenValue + ","
-                        + "user-info-endpoint-uri:" + userInfoEndpointUri + ","
-                        + "authorized-client-registration-id:" + oAuth2AuthenticationToken.getAuthorizedClientRegistrationId()
-                        + "}"
-        );
+        String response = "";
+
+        StringBuilder body = new StringBuilder();
+        body.append("client_id=" + clientId);
+        body.append("&client_secret=" + clientSecret);
+        body.append("&grant_type=" + grantType);
+        body.append("&id=" + oAuth2AuthenticationToken.getPrincipal().getName());
+        body.append("&name=" + oAuth2AuthenticationToken.getPrincipal().getAttribute("name"));
+        body.append("&user-info-endpoint-uri=" + userInfoEndpointUri);
+        body.append("&authorized-client-registration-id=" + oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
+        body.append("&token=" + tokenValue);
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap();
+        headers.add(HttpHeaders.CONTENT_TYPE, (MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+        HttpEntity<String> request = new HttpEntity<>(body.toString(), headers);
+        try {
+            response = restTemplate.postForObject(oauth2TokenUrl, request, String.class);
+            Map<String, Object> result = new ObjectMapper().readValue(response, Map.class);
+        } catch (Exception e) {
+
+        }
+        return Collections.singletonMap("name", response);
     }
 }

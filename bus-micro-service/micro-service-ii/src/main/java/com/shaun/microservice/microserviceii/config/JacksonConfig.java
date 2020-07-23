@@ -12,11 +12,11 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class JacksonConfig {
 
-    @Value("${spring.jackson.date-format}")
-    private String localDateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+    @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
+    private String localDateTimeFormat;
 
-    @Value("${spring.jackson.local-date-format}")
-    private String localDateFormat = "yyyy-MM-dd";
+    @Value("${spring.jackson.local-date-format:yyyy-MM-dd}")
+    private String localDateFormat;
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {

@@ -6,6 +6,29 @@ import java.util.Arrays;
 
 public class QuickSortAlgorithmTests {
 
+    int[] sourceArray = {2, 9, 4, 2, 2, 5, 1, 1, 2, 1, 9, 8, 4, 4, 9};
+    int[] resultArray = {1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 8, 9, 9, 9};
+
+    @Test
+    void BubbleSort() {
+
+        int[] arr = Arrays.copyOf(sourceArray, sourceArray.length);
+
+        for (int i = 1; i < arr.length; i++) {
+            boolean flag = true;
+            for (int j = 0; j < arr.length - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    swap(arr, j, j + 1);
+                    flag = false;
+                }
+            }
+            if (flag) {
+                break;
+            }
+        }
+        assert (Arrays.equals(arr, resultArray));
+    }
+
     private int[] quickSort(int[] arr, int left, int right) {
         if (left < right) {
             int partitionIndex = partition(arr, left, right);
@@ -29,22 +52,23 @@ public class QuickSortAlgorithmTests {
         return index - 1;
     }
 
-    private void swap(int[] arr, int i, int j) {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
 
     @Test
     void QuickSort() {
-
-        int[] sourceArray = {2, 9, 4, 2, 2, 5, 1, 1, 2, 1, 9, 8, 4, 4, 9};
-        int[] resultArray = {1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 8, 9, 9, 9};
 
         int[] arr = Arrays.copyOf(sourceArray, sourceArray.length);
 
         arr = quickSort(arr, 0, arr.length - 1);
 
         assert (Arrays.equals(arr, resultArray));
+    }
+
+
+    private void swap(int[] arr, int i, int j) {
+        if (i == j)
+            return;
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 }

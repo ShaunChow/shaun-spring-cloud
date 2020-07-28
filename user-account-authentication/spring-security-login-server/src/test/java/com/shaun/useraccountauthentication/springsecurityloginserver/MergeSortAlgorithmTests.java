@@ -10,6 +10,9 @@ import java.util.Arrays;
 @SpringBootTest
 public class MergeSortAlgorithmTests {
 
+    int[] sourceArray = {2, 9, 4, 2, 2, 5, 1, 1, 2, 1, 9, 8, 4, 4, 9};
+    int[] resultArray = {1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 8, 9, 9, 9};
+
     private int[] merge(int[] left, int[] right) {
         int[] result = new int[left.length + right.length];
         int i = 0;
@@ -50,9 +53,6 @@ public class MergeSortAlgorithmTests {
 
     @Test
     void MergeSort() {
-
-        int[] sourceArray = {2, 9, 4, 2, 2, 5, 1, 1, 2, 1, 9, 8, 4, 4, 9};
-        int[] resultArray = {1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 8, 9, 9, 9};
 
         int[] arr = Arrays.copyOf(sourceArray, sourceArray.length);
 

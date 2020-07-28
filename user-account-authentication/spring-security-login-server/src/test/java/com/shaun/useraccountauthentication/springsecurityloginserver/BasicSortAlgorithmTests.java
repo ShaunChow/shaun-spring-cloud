@@ -10,6 +10,9 @@ import java.util.Arrays;
 @SpringBootTest
 class BasicSortAlgorithmTests {
 
+    int[] sourceArray = {2, 9, 4, 2, 2, 5, 1, 1, 2, 1, 9, 8, 4, 4, 9};
+    int[] resultArray = {1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 8, 9, 9, 9};
+
     int[] generalInsertSort(int[] arr, int gap) {
         for (int i = gap; i < arr.length; i++) {
             int tmp = arr[i];
@@ -28,9 +31,6 @@ class BasicSortAlgorithmTests {
     @Test
     void InsertSort() {
 
-        int[] sourceArray = {2, 9, 4, 2, 2, 5, 1, 1, 2, 1, 9, 8, 4, 4, 9};
-        int[] resultArray = {1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 8, 9, 9, 9};
-
         int[] arr = Arrays.copyOf(sourceArray, sourceArray.length);
 
         arr = generalInsertSort(arr, 1);
@@ -40,9 +40,6 @@ class BasicSortAlgorithmTests {
 
     @Test
     void ShellSort() {
-
-        int[] sourceArray = {2, 9, 4, 2, 2, 5, 1, 1, 2, 1, 9, 8, 4, 4, 9};
-        int[] resultArray = {1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 8, 9, 9, 9};
 
         int[] arr = Arrays.copyOf(sourceArray, sourceArray.length);
 
@@ -62,9 +59,6 @@ class BasicSortAlgorithmTests {
     @Test
     void ShellSortII() {
 
-        int[] sourceArray = {2, 9, 4, 2, 2, 5, 1, 1, 2, 1, 9, 8, 4, 4, 9};
-        int[] resultArray = {1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 8, 9, 9, 9};
-
         int[] incrementSequence = {40, 13, 4, 1};
 
         int[] arr = Arrays.copyOf(sourceArray, sourceArray.length);
@@ -78,36 +72,7 @@ class BasicSortAlgorithmTests {
     }
 
     @Test
-    void BubbleSort() {
-
-        int[] sourceArray = {2, 9, 4, 2, 2, 5, 1, 1, 2, 1, 9, 8, 4, 4, 9};
-        int[] resultArray = {1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 8, 9, 9, 9};
-
-        int[] arr = Arrays.copyOf(sourceArray, sourceArray.length);
-
-        for (int i = 1; i < arr.length; i++) {
-            boolean flag = true;
-            for (int j = 0; j < arr.length - i; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    int tmp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = tmp;
-
-                    flag = false;
-                }
-            }
-            if (flag) {
-                break;
-            }
-        }
-        assert (Arrays.equals(arr, resultArray));
-    }
-
-    @Test
     void SelectionSort() {
-
-        int[] sourceArray = {2, 9, 4, 2, 2, 5, 1, 1, 2, 1, 9, 8, 4, 4, 9};
-        int[] resultArray = {1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 8, 9, 9, 9};
 
         int[] arr = Arrays.copyOf(sourceArray, sourceArray.length);
 
@@ -120,13 +85,18 @@ class BasicSortAlgorithmTests {
                 }
             }
 
-            if (i != min) {
-                int tmp = arr[i];
-                arr[i] = arr[min];
-                arr[min] = tmp;
-            }
+            swap(arr, i, min);
         }
         assert (Arrays.equals(arr, resultArray));
+    }
+
+
+    private void swap(int[] arr, int i, int j) {
+        if (i == j)
+            return;
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 
 }

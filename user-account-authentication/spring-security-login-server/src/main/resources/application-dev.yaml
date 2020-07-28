@@ -1,0 +1,43 @@
+spring:
+  security:
+    oauth2:
+      authorization:
+        token-url: http://10.252.31.39:8781/oauth/token
+        client-id: oauth8781001
+        client-secret: admin
+        grant-type: oauth2
+      client:
+        registration:
+          github-login:
+            provider: github
+            client-id: e9104e23ec1960264538
+            client-secret: 438f3aa2a6bb05cdc3f8159238524b4f5487ad01
+          keycloak-login:
+            provider: keycloak
+            client-id: spring-security
+            client-secret: ce8db355-2760-4831-81fe-49f8cd1b2c9e
+        #          spring-login:
+        #            provider: spring-oauth2
+        #            client-id: e9104e23ec1960264538
+        #            client-secret: 438f3aa2a6bb05cdc3f8159238524b4f5487ad01
+        provider:
+          # default google:
+          # default github:
+          # default facebook:
+          # default okta:
+          #         weibo:
+          #         qq:
+          #         dingtalk:
+          keycloak:
+            issuer-uri: http://10.252.31.39:8080/auth/realms/spring-login
+          #         cloudfoundry-uaa:
+          wechat:
+            authorization-uri: https://open.weixin.qq.com/connect/oauth2/authorize
+            token-uri: https://api.weixin.qq.com/sns/oauth2/access_token
+            user-info-uri: https://api.weixin.qq.com/sns/userinfo
+            user-name-attribute: openid
+          spring-oauth2:
+            authorization-uri: http://localhost:8781/oauth/authorize
+            token-uri: http://localhost:8781/oauth/access_token
+            user-info-uri: http://localhost:8781/oauth/userinfo
+            user-name-attribute: id

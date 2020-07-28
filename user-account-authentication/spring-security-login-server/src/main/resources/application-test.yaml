@@ -1,0 +1,14 @@
+spring:
+  security:
+    oauth2:
+      authorization:
+        token-url: http://10.252.31.39:8781/oauth/token
+        client-id: oauth8781001
+        client-secret: admin
+        grant-type: oauth2
+      client:
+        registration:
+          github-login:
+            provider: github
+            client-id: e9104e23ec1960264538
+            client-secret: 438f3aa2a6bb05cdc3f8159238524b4f5487ad01

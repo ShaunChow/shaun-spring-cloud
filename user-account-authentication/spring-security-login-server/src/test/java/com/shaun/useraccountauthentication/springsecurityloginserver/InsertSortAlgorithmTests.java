@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 @ActiveProfiles("test")
 @SpringBootTest
-class BasicSortAlgorithmTests {
+class InsertSortAlgorithmTests {
 
     int[] sourceArray = {2, 9, 4, 2, 2, 5, 1, 1, 2, 1, 9, 8, 4, 4, 9};
     int[] resultArray = {1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 5, 8, 9, 9, 9};
@@ -69,14 +69,6 @@ class BasicSortAlgorithmTests {
         }
 
         assert (Arrays.equals(arr, resultArray));
-    }
-
-    private void swap(int[] arr, int i, int j) {
-        if (i == j)
-            return;
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
     }
 
 }

@@ -56,7 +56,7 @@ public class MergeSortAlgorithmTests {
 
         int[] arr = Arrays.copyOf(sourceArray, sourceArray.length);
 
-        arr= mergeSort(arr);
+        arr = mergeSort(arr);
 
         assert (Arrays.equals(arr, resultArray));
     }

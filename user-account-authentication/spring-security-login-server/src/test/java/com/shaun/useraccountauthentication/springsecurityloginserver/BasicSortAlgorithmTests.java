@@ -71,26 +71,6 @@ class BasicSortAlgorithmTests {
         assert (Arrays.equals(arr, resultArray));
     }
 
-    @Test
-    void SelectionSort() {
-
-        int[] arr = Arrays.copyOf(sourceArray, sourceArray.length);
-
-        for (int i = 0; i < arr.length - 1; i++) {
-            int min = i;
-
-            for (int j = i + 1; j < arr.length; j++) {
-                if (arr[j] < arr[min]) {
-                    min = j;
-                }
-            }
-
-            swap(arr, i, min);
-        }
-        assert (Arrays.equals(arr, resultArray));
-    }
-
-
     private void swap(int[] arr, int i, int j) {
         if (i == j)
             return;

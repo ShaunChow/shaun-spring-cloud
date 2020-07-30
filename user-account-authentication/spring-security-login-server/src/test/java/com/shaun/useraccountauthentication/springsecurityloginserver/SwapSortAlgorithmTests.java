@@ -18,7 +18,6 @@ public class SwapSortAlgorithmTests {
     }
 
     private int partition(int[] arr, int left, int right) {
-        // 设定基准值（pivot）
         int pivot = left;
         int index = pivot + 1;
         for (int i = index; i <= right; i++) {
@@ -29,6 +28,23 @@ public class SwapSortAlgorithmTests {
         }
         swap(arr, pivot, index - 1);
         return index - 1;
+    }
+
+    private int partitionDoubleSideLoop(int[] arr, int left, int right) {
+        int pivot = left;
+        while (left < right) {
+            while (left < right && arr[right] > arr[pivot]) {
+                right--;
+            }
+            while (left < right && arr[left] <= arr[pivot]) {
+                left++;
+            }
+            if (right > left) {
+                swap(arr, right, left);
+            }
+        }
+        swap(arr, pivot, left);
+        return left;
     }
 
     /*
@@ -74,7 +90,7 @@ public class SwapSortAlgorithmTests {
 
     private int[] quickSort(int[] arr, int left, int right) {
         if (left < right) {
-            int partitionIndex = partition(arr, left, right);
+            int partitionIndex = partitionDoubleSideLoop(arr, left, right);
             quickSort(arr, left, partitionIndex - 1);
             quickSort(arr, partitionIndex + 1, right);
         }

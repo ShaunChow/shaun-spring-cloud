@@ -17,17 +17,17 @@ public class SwapSortAlgorithmTests {
         arr[j] = temp;
     }
 
-    private int partition(int[] arr, int left, int right) {
+    private int partitionSingleSideLoop(int[] arr, int left, int right) {
         int pivot = left;
-        int index = pivot + 1;
-        for (int i = index; i <= right; i++) {
+        int mark = left;
+        for (int i = mark; i <= right; i++) {
             if (arr[i] < arr[pivot]) {
-                swap(arr, i, index);
-                index++;
+                mark++;
+                swap(arr, i, mark);
             }
         }
-        swap(arr, pivot, index - 1);
-        return index - 1;
+        swap(arr, pivot, mark);
+        return mark;
     }
 
     private int partitionDoubleSideLoop(int[] arr, int left, int right) {
@@ -78,7 +78,7 @@ public class SwapSortAlgorithmTests {
 
         for (int i = 1; i < arr.length; i++) {
             for (int j = 0; j < arr.length - i; j++) {
-                int partitionIndex = partition(arr, j, arr.length - 1);
+                int partitionIndex = partitionSingleSideLoop(arr, j, arr.length - 1);
             }
         }
         assert (Arrays.equals(arr, resultArray));

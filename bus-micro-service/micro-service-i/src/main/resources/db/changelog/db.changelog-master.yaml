@@ -6,3 +6,6 @@ databaseChangeLog:
         - sqlFile:
             encoding: utf8
             path: classpath:database/schema-h2.sql
+        - sqlFile:
+            encoding: utf8
+            path: classpath:database/data-h2.sql

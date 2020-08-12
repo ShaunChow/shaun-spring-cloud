@@ -11,6 +11,13 @@ spring:
     data: classpath:database/data-h2.sql
     platform: all
 
+  h2: # default : jdbc:h2:mem:testdb
+    console:
+      path: /h2-console
+      enabled: true
+      settings:
+        web-allow-others: true
+
   liquibase:
     enabled: true
 
@@ -25,7 +32,8 @@ camel:
     name: camel-service-i
 greeting: Hello World
 
-timer.period: 2000
+timer:
+  period: 2000
 
 management:
   endpoints:

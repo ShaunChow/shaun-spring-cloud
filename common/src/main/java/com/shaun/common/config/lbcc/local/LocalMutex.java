@@ -1,12 +1,11 @@
-package com.shaun.common.lbcc.impl.local;
+package com.shaun.common.config.lbcc.local;
 
-import com.shaun.common.lbcc.Lock;
-import com.shaun.common.lbcc.MutexLock;
+import com.shaun.common.config.lbcc.Lock;
 
 /**
  * Mutex is an implementation of a mutual exclusion lock.
  */
-public class LocalMutex extends MutexLock implements Lock {
+public class LocalMutex implements Lock {
 
     /**
      * The current owner of the lock.
@@ -18,11 +17,6 @@ public class LocalMutex extends MutexLock implements Lock {
      */
     public Object getOwner() {
         return owner;
-    }
-
-
-    public LocalMutex(String businessName, String resourceId) {
-        super(businessName, resourceId);
     }
 
     /**

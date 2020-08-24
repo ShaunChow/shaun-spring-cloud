@@ -1,4 +1,4 @@
-package com.shaun.common.lbcc;
+package com.shaun.common.config.lbcc;
 
 public abstract class MutexLock {
 

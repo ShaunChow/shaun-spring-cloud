@@ -1,4 +1,4 @@
-package com.shaun.common.lbcc;
+package com.shaun.common.config.lbcc;
 
 /**
  * Lock is an interface for a lock which can be acquired and released.

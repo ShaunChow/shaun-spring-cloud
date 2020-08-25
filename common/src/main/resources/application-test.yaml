@@ -16,10 +16,10 @@ setting:
         registry-key: mutex
         expire-after: 60000
     jdbc:
-      driverClassName: com.mysql.jdbc.Driver
-      url: jdbc:mysql://49.235.155.249:3306/smart_office_welink?serverTimezone=Hongkong&characterEncoding=UTF-8&useSSL=false
-      username: root
-      password: HJSY.aifm
+      driverClassName:
+      url:
+      username:
+      password:
     zookeeper:
       root-path: /zookeeper/mutex
       curator:

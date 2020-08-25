@@ -1,18 +1,18 @@
 setting:
   lock-based-concurrent-control:
-    connect-type: jvm
+    connect-type: redis
     redis:
-      host:
-      port:
-      timeout:
+      host: 127.0.0.1
+      port: 6379
+      timeout: 0
       password:
-      database:
+      database: 2
       jedis:
         pool:
-          max-active:
-          max-wait:
-          max-idle:
-          min-idle:
+          max-active: 8
+          max-wait: -1
+          max-idle: 8
+          min-idle: 0
         registry-key: mutex
         expire-after: 60000
     jdbc:

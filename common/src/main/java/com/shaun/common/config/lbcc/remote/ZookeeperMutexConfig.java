@@ -18,19 +18,19 @@ public class ZookeeperMutexConfig {
     @Value("${setting.lock-based-concurrent-control.zookeeper.root-path:/zookeeper/mutex}")
     private String rootPath;
 
-    @Value("${setting.lock-based-concurrent-control.zookeeper.curator.retryCount}")
+    @Value("${setting.lock-based-concurrent-control.zookeeper.curator.retry-count}")
     private int retryCount;
 
-    @Value("${setting.lock-based-concurrent-control.zookeeper.curator.elapsedTimeMs}")
+    @Value("${setting.lock-based-concurrent-control.zookeeper.curator.elapsed-time-ms}")
     private int elapsedTimeMs;
 
-    @Value("${setting.lock-based-concurrent-control.zookeeper.curator.connectString}")
+    @Value("${setting.lock-based-concurrent-control.zookeeper.curator.connect-string}")
     private String connectString;
 
-    @Value("${setting.lock-based-concurrent-control.zookeeper.curator.sessionTimeoutMs}")
+    @Value("${setting.lock-based-concurrent-control.zookeeper.curator.session-timeout-ms}")
     private int sessionTimeoutMs;
 
-    @Value("${setting.lock-based-concurrent-control.zookeeper.curator.connectionTimeoutMs}")
+    @Value("${setting.lock-based-concurrent-control.zookeeper.curator.connection-timeout-ms}")
     private int connectionTimeoutMs;
 
     @Bean(name = "LBCC-zookeeper-curatorframework")

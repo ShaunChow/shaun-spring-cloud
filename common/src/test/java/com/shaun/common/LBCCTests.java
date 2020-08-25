@@ -11,10 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.Random;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 
 @ActiveProfiles("test")
@@ -27,9 +25,13 @@ public class LBCCTests {
 
     private static int COUNT_MUTEX = 0;
 
-    private static int RUNNNER_COUNT = 10000;
+    private static int RUNNNER_COUNT = 100;
 
-    private static CountDownLatch countDownLatch = new CountDownLatch(RUNNNER_COUNT);
+    private static CountDownLatch countDownLatch_Mutex = new CountDownLatch(RUNNNER_COUNT);
+
+    private static CountDownLatch countDownLatch_NoLock = new CountDownLatch(RUNNNER_COUNT);
+
+    private static CyclicBarrier cyclicBarrier = new CyclicBarrier(RUNNNER_COUNT);
 
     private static ExecutorService executorService = Executors.newFixedThreadPool(10);
 
@@ -55,7 +57,7 @@ public class LBCCTests {
             threadList.get(i).start();
         }
 
-        countDownLatch.await();
+        countDownLatch_Mutex.await();
 
         log.info("LBCC Result: " + COUNT_MUTEX);
 
@@ -65,19 +67,13 @@ public class LBCCTests {
     @Test
     void B_LBCC_NoLock() throws InterruptedException {
 
-        List<Thread> threadList = new ArrayList<>(RUNNNER_COUNT);
-
         for (int i = 0; i < RUNNNER_COUNT; i++) {
-            SingeThread runnable = new SingeThread();
+            SingeThread runnable = new SingeThread(cyclicBarrier);
             Thread thread = new Thread(runnable);
-            threadList.add(thread);
+            thread.start();
         }
 
-        for (int i = 0; i < RUNNNER_COUNT; i++) {
-            threadList.get(i).start();
-        }
-
-        countDownLatch.await();
+        countDownLatch_NoLock.await();
 
         log.info("LBCC Result: " + COUNT_NOLOCK);
 
@@ -96,9 +92,10 @@ public class LBCCTests {
                     log.info("TRY GET MUTEX：" + locked + " " + LocalDateTime.now() + " ---- " + Thread.currentThread().getName());
                 } while (!locked);
                 log.info("GETTED MUTEX：" + LocalDateTime.now() + " ---- " + Thread.currentThread().getName());
-                ++COUNT_MUTEX;
+                Thread.sleep(new Random().nextInt(100));
+                COUNT_MUTEX++;
                 log.info("ADD COUNT：" + COUNT_MUTEX + " ---- " + Thread.currentThread().getName());
-                countDownLatch.countDown();
+                countDownLatch_Mutex.countDown();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {
@@ -111,14 +108,25 @@ public class LBCCTests {
     }
 
     class SingeThread implements Runnable {
+
+        CyclicBarrier cyclicBarrier;
+
+        SingeThread(CyclicBarrier cyclicBarrier){
+            this.cyclicBarrier = cyclicBarrier;
+        }
+
         @Override
         public void run() {
             try {
-                ++COUNT_NOLOCK;
+                cyclicBarrier.await();
+                Thread.sleep(new Random().nextInt(100));
+                COUNT_NOLOCK++;
                 log.info("ADD COUNT：" + COUNT_NOLOCK + " ---- " + Thread.currentThread().getName());
-                Thread.sleep(0);
-                countDownLatch.countDown();
-            } catch (InterruptedException e) {
+                countDownLatch_NoLock.countDown();
+            } catch (InterruptedException
+                    | BrokenBarrierException
+                    e
+            ) {
                 e.printStackTrace();
             } finally {
             }

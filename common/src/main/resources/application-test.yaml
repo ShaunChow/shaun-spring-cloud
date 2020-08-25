@@ -1,6 +1,6 @@
 setting:
   lock-based-concurrent-control:
-    connect-type: redis
+    connect-type: jvm
     redis:
       host: 127.0.0.1
       port: 6379

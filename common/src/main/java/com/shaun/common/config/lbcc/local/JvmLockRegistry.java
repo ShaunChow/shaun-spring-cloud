@@ -42,6 +42,8 @@ public class JvmLockRegistry implements ExpirableLockRegistry {
 
         private final ReentrantLock localLock = new ReentrantLock();
 
+        private Thread owner = null;
+
         private volatile long lockedAt;
 
         public long getLockedAt() {
@@ -55,12 +57,15 @@ public class JvmLockRegistry implements ExpirableLockRegistry {
         @Override
         public void lock() {
             this.localLock.lock();
+            this.lockedAt = System.currentTimeMillis();
+            this.owner = Thread.currentThread();
         }
 
         @Override
         public void lockInterruptibly() throws InterruptedException {
             this.localLock.lockInterruptibly();
             this.lockedAt = System.currentTimeMillis();
+            this.owner = Thread.currentThread();
         }
 
         @Override
@@ -75,24 +80,32 @@ public class JvmLockRegistry implements ExpirableLockRegistry {
 
         @Override
         public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
-            boolean result = this.localLock.tryLock(time, unit);
-            if (result) {
-                this.lockedAt = System.currentTimeMillis();
+            if (null == this.owner
+                    || Thread.currentThread().equals(this.owner)) {
+                boolean result = this.localLock.tryLock(time, unit);
+                if (result) {
+                    this.lockedAt = System.currentTimeMillis();
+                    this.owner = Thread.currentThread();
+                }
+                return result;
             }
-            return result;
+
+            //TODO: tryLock
+            return false;
         }
 
         @Override
         public void unlock() {
-            if (!this.localLock.isHeldByCurrentThread()) {
+            if (!this.localLock.isHeldByCurrentThread()
+                    || !Thread.currentThread().equals(this.owner)) {
                 throw new IllegalStateException("You do not own lock at " + this.lockKey);
             }
             if (this.localLock.getHoldCount() > 1) {
                 this.localLock.unlock();
                 return;
             }
-            JvmLockRegistry.this.locks.remove(this.lockKey);
             this.localLock.unlock();
+            this.owner = null;
         }
 
         @Override

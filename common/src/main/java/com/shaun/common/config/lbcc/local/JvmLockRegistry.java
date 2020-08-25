@@ -3,96 +3,105 @@ package com.shaun.common.config.lbcc.local;
 import org.springframework.integration.support.locks.ExpirableLockRegistry;
 import org.springframework.util.Assert;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class JvmLockRegistry implements ExpirableLockRegistry {
 
-    public static final Map<String, JvmLock> locks = new ConcurrentHashMap();
+    private final Map<String, JvmLock> locks = new ConcurrentHashMap<>();
 
     @Override
-    public void expireUnusedOlderThan(long l) {
+    public void expireUnusedOlderThan(long age) {
+        Iterator<Map.Entry<String, JvmLockRegistry.JvmLock>> iterator = this.locks.entrySet().iterator();
+        long now = System.currentTimeMillis();
 
+        while(iterator.hasNext()) {
+            Map.Entry<String, JvmLockRegistry.JvmLock> entry = iterator.next();
+            JvmLockRegistry.JvmLock lock = entry.getValue();
+            if (now - lock.getLockedAt() > age && !lock.isAcquiredInThisProcess()) {
+                iterator.remove();
+            }
+        }
     }
 
     @Override
     public Lock obtain(Object lockKey) {
         Assert.isInstanceOf(String.class, lockKey);
         String path = (String) lockKey;
-        return locks.computeIfAbsent(path, (key) -> new JvmLock(Thread.currentThread(), key));
+        return locks.computeIfAbsent(path, JvmLock::new);
     }
 
-    private static final class JvmLock implements Lock {
-        private final String path;
-        private boolean locked;
-        private Thread owner;
-        private final long lastUsed = System.currentTimeMillis();
+    private final class JvmLock implements Lock {
 
-        JvmLock(Thread owner, String path) {
-            this.owner = owner;
-            this.path = path;
+        private final String lockKey;
+
+        private final ReentrantLock localLock = new ReentrantLock();
+
+        private volatile long lockedAt;
+
+        public long getLockedAt() {
+            return this.lockedAt;
         }
 
-        protected boolean isOwned() {
-            return (locked && Thread.currentThread() == owner);
+        JvmLock(String lockKey) {
+            this.lockKey = lockKey;
         }
-
-        public long getLastUsed() {
-            return this.lastUsed;
-        }
-
 
         @Override
-        public synchronized void lock() {
-            if (locked && Thread.currentThread() == owner) {
-                throw new IllegalMonitorStateException();
-            }
-            do {
-                if (!locked) {
-                    locked = true;
-                    owner = Thread.currentThread();
-                } else {
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        // try again
-                    }
-                }
-            } while (owner != Thread.currentThread());
+        public void lock() {
+            this.localLock.lock();
         }
 
         @Override
         public void lockInterruptibly() throws InterruptedException {
-
+            this.localLock.lockInterruptibly();
+            this.lockedAt = System.currentTimeMillis();
         }
 
         @Override
         public boolean tryLock() {
-            return false;
+            try {
+                return tryLock(0, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
         }
 
         @Override
         public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
-            return false;
+            boolean result = this.localLock.tryLock(time, unit);
+            if (result) {
+                this.lockedAt = System.currentTimeMillis();
+            }
+            return result;
         }
 
         @Override
-        public synchronized void unlock() {
-            if (Thread.currentThread() != owner) {
-                throw new IllegalMonitorStateException();
+        public void unlock() {
+            if (!this.localLock.isHeldByCurrentThread()) {
+                throw new IllegalStateException("You do not own lock at " + this.lockKey);
             }
-            owner = null;
-            locked = false;
-            JvmLockRegistry.locks.remove(this.path, this);
-            notify();
+            if (this.localLock.getHoldCount() > 1) {
+                this.localLock.unlock();
+                return;
+            }
+            JvmLockRegistry.this.locks.remove(this.lockKey);
+            this.localLock.unlock();
         }
 
         @Override
         public Condition newCondition() {
-            return null;
+            throw new UnsupportedOperationException("Conditions are not supported");
+        }
+
+        public boolean isAcquiredInThisProcess() {
+            return this.localLock.isHeldByCurrentThread();
         }
     }
 

@@ -25,13 +25,15 @@ public class LBCCTests {
 
     private static int COUNT_MUTEX = 0;
 
-    private static int RUNNNER_COUNT = 100;
+    private static int RUNNNER_COUNT = 1000;
 
     private static CountDownLatch countDownLatch_Mutex = new CountDownLatch(RUNNNER_COUNT);
 
     private static CountDownLatch countDownLatch_NoLock = new CountDownLatch(RUNNNER_COUNT);
 
-    private static CyclicBarrier cyclicBarrier = new CyclicBarrier(RUNNNER_COUNT);
+    private static CyclicBarrier cyclicBarrier_Mutex = new CyclicBarrier(RUNNNER_COUNT);
+
+    private static CyclicBarrier cyclicBarrier_NoLock = new CyclicBarrier(RUNNNER_COUNT);
 
     private static ExecutorService executorService = Executors.newFixedThreadPool(10);
 
@@ -44,7 +46,7 @@ public class LBCCTests {
         List<Thread> threadList = new ArrayList<>(RUNNNER_COUNT);
 
         for (int i = 0; i < RUNNNER_COUNT; i++) {
-            MutexThread runnable = new MutexThread();
+            MutexThread runnable = new MutexThread(cyclicBarrier_Mutex);
 
 //            executorService.submit(runnable);
 
@@ -68,7 +70,7 @@ public class LBCCTests {
     void B_LBCC_NoLock() throws InterruptedException {
 
         for (int i = 0; i < RUNNNER_COUNT; i++) {
-            SingeThread runnable = new SingeThread(cyclicBarrier);
+            SingeThread runnable = new SingeThread(cyclicBarrier_NoLock);
             Thread thread = new Thread(runnable);
             thread.start();
         }
@@ -82,21 +84,31 @@ public class LBCCTests {
 
 
     class MutexThread implements Runnable {
+
+        CyclicBarrier cyclicBarrier;
+
+        MutexThread(CyclicBarrier cyclicBarrier) {
+            this.cyclicBarrier = cyclicBarrier;
+        }
+
         @Override
         public void run() {
             boolean locked = false;
             Lock lock = expirableLockRegistry.obtain("resource-test");
             try {
+                cyclicBarrier.await();
+
                 do {
                     locked = lock.tryLock(3, TimeUnit.SECONDS);
                     log.info("TRY GET MUTEX：" + locked + " " + LocalDateTime.now() + " ---- " + Thread.currentThread().getName());
                 } while (!locked);
                 log.info("GETTED MUTEX：" + LocalDateTime.now() + " ---- " + Thread.currentThread().getName());
-                Thread.sleep(new Random().nextInt(100));
+
+                Thread.sleep(new Random().nextInt(3));
                 COUNT_MUTEX++;
                 log.info("ADD COUNT：" + COUNT_MUTEX + " ---- " + Thread.currentThread().getName());
                 countDownLatch_Mutex.countDown();
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | BrokenBarrierException e) {
                 e.printStackTrace();
             } finally {
                 if (locked) {
@@ -111,7 +123,7 @@ public class LBCCTests {
 
         CyclicBarrier cyclicBarrier;
 
-        SingeThread(CyclicBarrier cyclicBarrier){
+        SingeThread(CyclicBarrier cyclicBarrier) {
             this.cyclicBarrier = cyclicBarrier;
         }
 
@@ -119,14 +131,12 @@ public class LBCCTests {
         public void run() {
             try {
                 cyclicBarrier.await();
-                Thread.sleep(new Random().nextInt(100));
+
+                Thread.sleep(new Random().nextInt(3));
                 COUNT_NOLOCK++;
                 log.info("ADD COUNT：" + COUNT_NOLOCK + " ---- " + Thread.currentThread().getName());
                 countDownLatch_NoLock.countDown();
-            } catch (InterruptedException
-                    | BrokenBarrierException
-                    e
-            ) {
+            } catch (InterruptedException | BrokenBarrierException e) {
                 e.printStackTrace();
             } finally {
             }

@@ -1,6 +1,6 @@
 setting:
   lock-based-concurrent-control:
-    connect-type: jvm
+    connect-type: jdbc
     redis:
       host: 127.0.0.1
       port: 6379
@@ -16,9 +16,9 @@ setting:
         registry-key: mutex
         expire-after: 60000
     jdbc:
-      driverClassName:
-      url:
-      username:
+      driverClassName: org.h2.Driver
+      url: jdbc:h2:mem:testdb
+      username: sa
       password:
     zookeeper:
       root-path: /zookeeper/mutex

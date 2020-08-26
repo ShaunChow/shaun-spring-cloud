@@ -1,8 +1,8 @@
 package com.shaun.common.config.lbcc.remote;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +18,19 @@ import javax.sql.DataSource;
 public class JdbcMutexConfig {
 
     @Bean(name = "LBCC-jdbc-datasource")
-    @ConfigurationProperties(prefix = "setting.lock-based-concurrent-control.jdbc")
-    public DataSource businessDbDataSource() {
-        return DataSourceBuilder.create().build();
+    public DataSource businessDbDataSource(
+            @Value("${setting.lock-based-concurrent-control.jdbc.driverClassName}") String driverClassName
+            , @Value("${setting.lock-based-concurrent-control.jdbc.url}") String url
+            , @Value("${setting.lock-based-concurrent-control.jdbc.username}") String username
+            , @Value("${setting.lock-based-concurrent-control.jdbc.password}") String password
+    ) {
+
+        return DataSourceBuilder.create()
+                .driverClassName(driverClassName)
+                .url(url)
+                .username(username)
+                .password(password)
+                .build();
     }
 
     @Bean

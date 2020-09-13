@@ -48,4 +48,4 @@ eureka:
 
 setting:
   shaun-rest-controller-advice:
-    enable: on
+    enable: true

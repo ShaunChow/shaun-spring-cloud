@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.shaun.common.config.RestControllerAdviceConfig,\
+  com.shaun.common.config.lbcc.local.JvmMutexConfig,\
+  com.shaun.common.config.lbcc.remote.JdbcMutexConfig,\
+  com.shaun.common.config.lbcc.remote.RedisMutexConfig,\
+  com.shaun.common.config.lbcc.remote.ZookeeperMutexConfig

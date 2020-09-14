@@ -7,7 +7,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@ConditionalOnExpression("'${setting.cors.enable}'.equals('on')")
+@ConditionalOnExpression("'${setting.cors.enable}'.equals('true')")
 @Configuration
 public class CorsConfig {
 

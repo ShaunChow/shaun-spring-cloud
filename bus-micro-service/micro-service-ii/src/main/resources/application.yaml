@@ -46,6 +46,8 @@ eureka:
     instance-id: ${spring.application.name}:${random.int}
 
 
+# shaun common's config
+
 setting:
   shaun-rest-controller-advice:
     enable: true

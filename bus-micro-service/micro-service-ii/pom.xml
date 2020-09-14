@@ -17,6 +17,20 @@
 
     <dependencies>
 
+        <!-- shaun common -->
+
+        <dependency>
+            <groupId>com.shaun</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.data</groupId>
+                    <artifactId>spring-data-redis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- oauth2 -->
 
         <dependency>

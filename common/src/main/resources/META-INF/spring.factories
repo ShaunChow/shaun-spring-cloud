@@ -1,4 +1,6 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.shaun.common.component.ApplicationContextProvider,\
+  com.shaun.common.config.JacksonConfig,\
   com.shaun.common.config.RestControllerAdviceConfig,\
   com.shaun.common.config.lbcc.local.JvmMutexConfig,\
   com.shaun.common.config.lbcc.remote.JdbcMutexConfig,\

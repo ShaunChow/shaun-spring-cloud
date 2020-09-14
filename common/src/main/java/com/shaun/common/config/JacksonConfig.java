@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 import java.time.format.DateTimeFormatter;
 
@@ -14,7 +15,10 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class JacksonConfig {
 
-    @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
+    @Value("${spring.jackson.date-format:#{null}}")
+    private String springlocalDateTimeFormat;
+
+    @Value("${setting.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
     private String localDateTimeFormat;
 
     @Value("${setting.jackson.local-date-format:yyyy-MM-dd}")
@@ -23,9 +27,14 @@ public class JacksonConfig {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
         return builder -> {
-            builder.simpleDateFormat(localDateTimeFormat);
+
+            if (StringUtils.isEmpty(springlocalDateTimeFormat)) {
+                builder.simpleDateFormat(localDateTimeFormat);
+                builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(localDateTimeFormat)));
+            }
+
             builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern(localDateFormat)));
-            builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(localDateTimeFormat)));
+
         };
     }
 }

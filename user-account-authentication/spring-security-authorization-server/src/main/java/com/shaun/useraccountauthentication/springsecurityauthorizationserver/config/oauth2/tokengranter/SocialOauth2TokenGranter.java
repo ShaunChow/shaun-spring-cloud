@@ -56,6 +56,8 @@ public class SocialOauth2TokenGranter extends AbstractTokenGranter {
             HttpEntity<Map> request = new HttpEntity<>(null, headers);
             String response = restTemplate.exchange(userInfoEndpointUri, HttpMethod.GET, request, String.class).getBody();
             Map<String, Object> result = new ObjectMapper().readValue(response, Map.class);
+
+            logger.info(result);
         } catch (Exception e) {
             throw new InvalidGrantException("Could not authenticate oauth2 :" + e.getMessage());
         }

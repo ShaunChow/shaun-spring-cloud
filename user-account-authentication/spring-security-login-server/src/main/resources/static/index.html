@@ -203,11 +203,46 @@
     </div>
 </div>
 <script type="text/javascript">
+    const redirectUrl = getQueryVariable("redirect_url");
+    if (redirectUrl) {
+        document.cookie = "redirect_url=" + redirectUrl;
+    }
+
     $.get("/user", function (data) {
         $("#user").html(data.name);
-        $(".unauthenticated").hide()
-        $(".authenticated").show()
+        $(".unauthenticated").hide();
+        $(".authenticated").show();
+
+        window.location.replace(
+            getCookie("redirect_url")
+            +"token="
+            +data.refresh_token
+        );
     });
+
+    function getQueryVariable(variable) {
+        const query = window.location.search.substring(1);
+        const vars = query.split("&");
+        for (let i=0; i<vars.length; i++) {
+            const pair = vars[i].split("=");
+            if(pair[0] == variable){
+                return pair[1];
+            }
+        }
+        return(false);
+    }
+
+    function getCookie(name) {
+        const cookies = document.cookie;
+        const list = cookies.split("; ");
+        for(let i = 0; i < list.length; i++) {
+            const arr = list[i].split("=");
+            if(arr[0] == name)
+                return decodeURIComponent(arr[1]);
+        }
+        return "";
+    }
+
 </script>
 </body>
 </html>

@@ -10,8 +10,8 @@ spring:
         registration:
           github-login:
             provider: github
-            client-id: e9104e23ec1960264538
-            client-secret: 438f3aa2a6bb05cdc3f8159238524b4f5487ad01
+            client-id:
+            client-secret:
 #          keycloak-login:
 #            provider: keycloak
 #            client-id: spring-security

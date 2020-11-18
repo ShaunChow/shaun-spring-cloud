@@ -13,12 +13,12 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpSession;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,13 +50,14 @@ public class UserResource {
 
     @GetMapping("/user")
     public Map<String, Object> user(
-            OAuth2AuthenticationToken oAuth2AuthenticationToken
+            @CookieValue(value = "redirect_url", required = false) String redirectUrl
+            , OAuth2AuthenticationToken oAuth2AuthenticationToken
             , HttpSession session) {
+        Map<String,Object> result =new HashMap<>();
 
         if (null != session.getAttribute("OAUTH2_REFRESH_TOKEN")) {
-
-            Map<String,Object> result =new HashMap<>();
             result.putIfAbsent("name",session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
+            result.putIfAbsent("refresh_token",session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
             return result;
         }
 
@@ -87,13 +88,13 @@ public class UserResource {
         HttpEntity<String> request = new HttpEntity<>(body.toString(), headers);
         try {
             response = restTemplate.postForObject(oauth2TokenUrl, request, String.class);
-            Map<String, Object> result = new ObjectMapper().readValue(response, Map.class);
+            result = new ObjectMapper().readValue(response, Map.class);
 
             session.setAttribute("OAUTH2_REFRESH_TOKEN",result.get("refresh_token").toString());
 
         } catch (Exception e) {
 
         }
-        return Collections.singletonMap("name", response);
+        return result;
     }
 }

@@ -1,12 +1,12 @@
 package com.shaun.useraccountauthentication.springsecurityloginserver.web.rest;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -17,12 +17,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 public class UserResource {
+
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     @Value("${spring.security.oauth2.authorization.token-url}")
     private String oauth2TokenUrl;
@@ -47,7 +50,15 @@ public class UserResource {
 
     @GetMapping("/user")
     public Map<String, Object> user(
-            OAuth2AuthenticationToken oAuth2AuthenticationToken) throws JsonProcessingException {
+            OAuth2AuthenticationToken oAuth2AuthenticationToken
+            , HttpSession session) {
+
+        if (null != session.getAttribute("OAUTH2_REFRESH_TOKEN")) {
+
+            Map<String,Object> result =new HashMap<>();
+            result.putIfAbsent("name",session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
+            return result;
+        }
 
         OAuth2AuthorizedClient client = authorizedClientService
                 .loadAuthorizedClient(
@@ -77,6 +88,9 @@ public class UserResource {
         try {
             response = restTemplate.postForObject(oauth2TokenUrl, request, String.class);
             Map<String, Object> result = new ObjectMapper().readValue(response, Map.class);
+
+            session.setAttribute("OAUTH2_REFRESH_TOKEN",result.get("refresh_token").toString());
+
         } catch (Exception e) {
 
         }

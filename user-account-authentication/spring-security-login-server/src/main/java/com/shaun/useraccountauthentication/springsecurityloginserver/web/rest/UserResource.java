@@ -13,11 +13,14 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,12 +55,19 @@ public class UserResource {
     public Map<String, Object> user(
             @CookieValue(value = "redirect_url", required = false) String redirectUrl
             , OAuth2AuthenticationToken oAuth2AuthenticationToken
-            , HttpSession session) {
-        Map<String,Object> result =new HashMap<>();
+            , HttpSession session
+            , HttpServletResponse resp
+    ) {
+        Map<String, Object> result = new HashMap<>();
 
         if (null != session.getAttribute("OAUTH2_REFRESH_TOKEN")) {
-            result.putIfAbsent("name",session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
-            result.putIfAbsent("refresh_token",session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
+            result.putIfAbsent("name", session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
+            result.putIfAbsent("refresh_token", session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
+
+            if (!StringUtils.isEmpty(redirectUrl)) {
+                result.putIfAbsent("redirect_url", redirectUrl + "token=" + session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
+                deleteCookie(resp, "redirect_url");
+            }
             return result;
         }
 
@@ -72,8 +82,6 @@ public class UserResource {
         String userInfoEndpointUri = client.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUri();
 
-        String response = "";
-
         StringBuilder body = new StringBuilder();
         body.append("client_id=" + clientId);
         body.append("&client_secret=" + clientSecret);
@@ -87,14 +95,26 @@ public class UserResource {
         headers.add(HttpHeaders.CONTENT_TYPE, (MediaType.APPLICATION_FORM_URLENCODED_VALUE));
         HttpEntity<String> request = new HttpEntity<>(body.toString(), headers);
         try {
-            response = restTemplate.postForObject(oauth2TokenUrl, request, String.class);
+            String response = restTemplate.postForObject(oauth2TokenUrl, request, String.class);
             result = new ObjectMapper().readValue(response, Map.class);
 
-            session.setAttribute("OAUTH2_REFRESH_TOKEN",result.get("refresh_token").toString());
+            session.setAttribute("OAUTH2_REFRESH_TOKEN", result.get("refresh_token").toString());
 
+            result.putIfAbsent("name", result.get("refresh_token").toString());
+            if (!StringUtils.isEmpty(redirectUrl)) {
+                result.putIfAbsent("redirect_url", redirectUrl + "token=" + session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
+                deleteCookie(resp, "redirect_url");
+            }
         } catch (Exception e) {
 
         }
         return result;
+    }
+
+
+    private void deleteCookie(HttpServletResponse response, String name) {
+        Cookie cookie_redirectUrl = new Cookie(name, null);
+        cookie_redirectUrl.setMaxAge(0);
+        response.addCookie(cookie_redirectUrl);
     }
 }

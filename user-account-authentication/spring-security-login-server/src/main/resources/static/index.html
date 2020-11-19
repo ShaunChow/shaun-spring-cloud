@@ -213,11 +213,9 @@
         $(".unauthenticated").hide();
         $(".authenticated").show();
 
-        window.location.replace(
-            getCookie("redirect_url")
-            +"token="
-            +data.refresh_token
-        );
+        if (data.redirect_url) {
+            window.location.replace(data.redirect_url);
+        }
     });
 
     function getQueryVariable(variable) {

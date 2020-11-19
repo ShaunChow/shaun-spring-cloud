@@ -209,7 +209,7 @@
     }
 
     $.get("/user", function (data) {
-        $("#user").html(data.name);
+        $("#user").html(data.access_token);
         $(".unauthenticated").hide();
         $(".authenticated").show();
 

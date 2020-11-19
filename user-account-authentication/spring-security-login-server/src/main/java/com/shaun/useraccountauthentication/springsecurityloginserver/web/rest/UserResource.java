@@ -1,6 +1,7 @@
 package com.shaun.useraccountauthentication.springsecurityloginserver.web.rest;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,7 +23,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -57,19 +57,7 @@ public class UserResource {
             , OAuth2AuthenticationToken oAuth2AuthenticationToken
             , HttpSession session
             , HttpServletResponse resp
-    ) {
-        Map<String, Object> result = new HashMap<>();
-
-        if (null != session.getAttribute("OAUTH2_REFRESH_TOKEN")) {
-            result.putIfAbsent("name", session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
-            result.putIfAbsent("refresh_token", session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
-
-            if (!StringUtils.isEmpty(redirectUrl)) {
-                result.putIfAbsent("redirect_url", redirectUrl + "token=" + session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
-                deleteCookie(resp, "redirect_url");
-            }
-            return result;
-        }
+    ) throws JsonProcessingException {
 
         OAuth2AuthorizedClient client = authorizedClientService
                 .loadAuthorizedClient(
@@ -79,10 +67,20 @@ public class UserResource {
         String tokenValue = client
                 .getAccessToken().getTokenValue();
 
+        StringBuilder body = new StringBuilder();
+
+        if (null != session.getAttribute("OAUTH2_REFRESH_TOKEN")) {
+            body.append("client_id=" + clientId);
+            body.append("&client_secret=" + clientSecret);
+            body.append("&grant_type=refresh_token");
+            body.append("&refresh_token=" + session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
+            body.append("&token=" + tokenValue);
+            return validate(redirectUrl, body, session, resp);
+        }
+
         String userInfoEndpointUri = client.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUri();
 
-        StringBuilder body = new StringBuilder();
         body.append("client_id=" + clientId);
         body.append("&client_secret=" + clientSecret);
         body.append("&grant_type=" + grantType);
@@ -91,26 +89,37 @@ public class UserResource {
         body.append("&user-info-endpoint-uri=" + userInfoEndpointUri);
         body.append("&authorized-client-registration-id=" + oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
         body.append("&token=" + tokenValue);
+        return validate(redirectUrl, body, session, resp);
+    }
+
+
+    private Map<String, Object> validate(
+            String redirectUrl
+            , StringBuilder body
+            , HttpSession session
+            , HttpServletResponse resp
+    ) throws JsonProcessingException {
+
         MultiValueMap<String, String> headers = new LinkedMultiValueMap();
         headers.add(HttpHeaders.CONTENT_TYPE, (MediaType.APPLICATION_FORM_URLENCODED_VALUE));
         HttpEntity<String> request = new HttpEntity<>(body.toString(), headers);
-        try {
-            String response = restTemplate.postForObject(oauth2TokenUrl, request, String.class);
-            result = new ObjectMapper().readValue(response, Map.class);
 
-            session.setAttribute("OAUTH2_REFRESH_TOKEN", result.get("refresh_token").toString());
+        String response = restTemplate.postForObject(oauth2TokenUrl, request, String.class);
+        Map<String, Object> result = new ObjectMapper().readValue(response, Map.class);
 
-            result.putIfAbsent("name", result.get("refresh_token").toString());
-            if (!StringUtils.isEmpty(redirectUrl)) {
-                result.putIfAbsent("redirect_url", redirectUrl + "token=" + session.getAttribute("OAUTH2_REFRESH_TOKEN").toString());
-                deleteCookie(resp, "redirect_url");
-            }
-        } catch (Exception e) {
+        session.setAttribute("OAUTH2_REFRESH_TOKEN", result.get("refresh_token").toString());
 
+        if (!StringUtils.isEmpty(redirectUrl)) {
+            result.putIfAbsent(
+                    "redirect_url"
+                    , redirectUrl
+                            + "token=" + result.get("access_token").toString()
+                            + "&expires_in=" + result.get("expires_in").toString()
+            );
+            deleteCookie(resp, "redirect_url");
         }
         return result;
     }
-
 
     private void deleteCookie(HttpServletResponse response, String name) {
         Cookie cookie_redirectUrl = new Cookie(name, null);

@@ -25,6 +25,7 @@ public class SocialOauth2TokenGranter extends AbstractTokenGranter {
     private RestTemplate restTemplate;
 
     public SocialOauth2TokenGranter(
+//            AuthenticationManager authenticationManager
             AuthorizationServerTokenServices tokenServices,
             ClientDetailsService clientDetailsService,
             OAuth2RequestFactory requestFactory,
@@ -67,6 +68,31 @@ public class SocialOauth2TokenGranter extends AbstractTokenGranter {
                 "",
                 Arrays.asList(new SimpleGrantedAuthority("ROLE_OAUTH2_READ")));
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
+
+
+//        Authentication userAuth = new UsernamePasswordAuthenticationToken(username, password);
+//        ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
+//        try {
+//            userAuth = authenticationManager.authenticate(userAuth);
+//        }
+//        catch (AccountStatusException ase) {
+//            //covers expired, locked, disabled cases (mentioned in section 5.2, draft 31)
+//            throw new InvalidGrantException(ase.getMessage());
+//        }
+//        catch (BadCredentialsException e) {
+//            // If the username/password are wrong the spec says we should send 400/invalid grant
+//            throw new InvalidGrantException(e.getMessage());
+//        }
+//        catch (UsernameNotFoundException e) {
+//            // If the user is not found, report a generic error message
+//            throw new InvalidGrantException(e.getMessage());
+//        }
+//        if (userAuth == null || !userAuth.isAuthenticated()) {
+//            throw new InvalidGrantException("Could not authenticate user: " + username);
+//        }
+//
+//        OAuth2Request storedOAuth2Request = getRequestFactory().createOAuth2Request(client, tokenRequest);
+//        return new OAuth2Authentication(storedOAuth2Request, userAuth);
 
         if (userAuth != null && userAuth.isAuthenticated()) {
             OAuth2Request storedOAuth2Request = this.getRequestFactory().createOAuth2Request(client, tokenRequest);

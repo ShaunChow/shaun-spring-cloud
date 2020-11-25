@@ -1,6 +1,7 @@
 package com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2;
 
 import com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2.tokengranter.SocialOauth2TokenGranter;
+import com.shaun.useraccountauthentication.springsecurityauthorizationserver.domain.service.IRegistrationService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,7 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
 
+    private final IRegistrationService registrationService;
     private final RestTemplate restTemplate;
 
     public Oauth2AuthorizationConfig(
@@ -42,12 +44,14 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
             BCryptPasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
             @Qualifier("org.springframework.security.userDetailsService") UserDetailsService userDetailsService,
-            RestTemplate restTemplate) {
+            RestTemplate restTemplate,
+            IRegistrationService registrationService) {
         this.dataSource = dataSource;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.restTemplate = restTemplate;
+        this.registrationService = registrationService;
     }
 
     @Bean
@@ -108,6 +112,8 @@ public class Oauth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
         ArrayList<TokenGranter> tokenGranters = new ArrayList<>();
         tokenGranters.add(endpoints.getTokenGranter());
         tokenGranters.add(new SocialOauth2TokenGranter(
+                registrationService,
+                authenticationManager,
                 endpoints.getTokenServices(),
                 endpoints.getClientDetailsService(),
                 endpoints.getOAuth2RequestFactory(),

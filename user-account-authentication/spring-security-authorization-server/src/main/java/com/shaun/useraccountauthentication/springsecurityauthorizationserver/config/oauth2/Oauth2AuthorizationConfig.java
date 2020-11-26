@@ -1,6 +1,6 @@
 package com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2;
 
-import com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2.tokengranter.SocialOauth2TokenGranter;
+import com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2.tokengranter.social.SocialOauth2TokenGranter;
 import com.shaun.useraccountauthentication.springsecurityauthorizationserver.domain.service.IRegistrationService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

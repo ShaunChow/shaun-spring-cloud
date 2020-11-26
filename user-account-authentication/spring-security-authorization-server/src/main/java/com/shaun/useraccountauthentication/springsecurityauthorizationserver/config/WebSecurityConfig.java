@@ -1,6 +1,7 @@
 package com.shaun.useraccountauthentication.springsecurityauthorizationserver.config;
 
 
+import com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2.tokengranter.social.SocialOauth2AuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -51,6 +52,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login", "/oauth/authorize")
                 .and().authorizeRequests().anyRequest().authenticated()
                 .and().formLogin().permitAll();
+
+        SocialOauth2AuthenticationProvider socialOauth2AuthenticationProvider = new SocialOauth2AuthenticationProvider();
+        socialOauth2AuthenticationProvider.setUserDetailsService(super.userDetailsServiceBean());
+        http.authenticationProvider(socialOauth2AuthenticationProvider);
     }
 
     @Override

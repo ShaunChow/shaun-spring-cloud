@@ -1,4 +1,4 @@
-package com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2.tokengranter;
+package com.shaun.useraccountauthentication.springsecurityauthorizationserver.config.oauth2.tokengranter.social;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shaun.useraccountauthentication.springsecurityauthorizationserver.domain.service.IRegistrationService;
@@ -78,7 +78,7 @@ public class SocialOauth2TokenGranter extends AbstractTokenGranter {
         }
 
 
-        Authentication userAuth = new UsernamePasswordAuthenticationToken(name, "admin");
+        Authentication userAuth = new SocialOauth2AuthenticationToken(name);
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
         try {
             userAuth = authenticationManager.authenticate(userAuth);
@@ -91,6 +91,9 @@ public class SocialOauth2TokenGranter extends AbstractTokenGranter {
         } catch (UsernameNotFoundException e) {
             // If the user is not found, report a generic error message
             throw new InvalidGrantException(e.getMessage());
+        } catch (Exception e) {
+            logger.error(e);
+            throw e;
         }
         if (userAuth == null || !userAuth.isAuthenticated()) {
             throw new InvalidGrantException("Could not authenticate user: " + name);

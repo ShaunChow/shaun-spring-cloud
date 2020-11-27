@@ -32,7 +32,7 @@ public abstract class AbstractOauth2AuthenticationProvider implements Authentica
     public AbstractOauth2AuthenticationProvider() {
     }
 
-    public final void afterPropertiesSet() throws Exception {
+    public final void afterPropertiesSet() {
         Assert.notNull(this.userCache, "A user cache must be set");
         Assert.notNull(this.messages, "A message source must be set");
         this.doAfterPropertiesSet();
@@ -155,7 +155,7 @@ public abstract class AbstractOauth2AuthenticationProvider implements Authentica
         public void check(UserDetails user) {
             if (!user.isCredentialsNonExpired()) {
                 AbstractOauth2AuthenticationProvider.this.logger.debug("User account credentials have expired");
-                throw new CredentialsExpiredException(AbstractOauth2AuthenticationProvider.this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.credentialsExpired", "User credentials have expired"));
+                throw new CredentialsExpiredException(AbstractOauth2AuthenticationProvider.this.messages.getMessage("AbstractOauth2AuthenticationProvider.credentialsExpired", "User credentials have expired"));
             }
         }
     }
@@ -167,13 +167,13 @@ public abstract class AbstractOauth2AuthenticationProvider implements Authentica
         public void check(UserDetails user) {
             if (!user.isAccountNonLocked()) {
                 AbstractOauth2AuthenticationProvider.this.logger.debug("User account is locked");
-                throw new LockedException(AbstractOauth2AuthenticationProvider.this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.locked", "User account is locked"));
+                throw new LockedException(AbstractOauth2AuthenticationProvider.this.messages.getMessage("AbstractOauth2AuthenticationProvider.locked", "User account is locked"));
             } else if (!user.isEnabled()) {
                 AbstractOauth2AuthenticationProvider.this.logger.debug("User account is disabled");
-                throw new DisabledException(AbstractOauth2AuthenticationProvider.this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.disabled", "User is disabled"));
+                throw new DisabledException(AbstractOauth2AuthenticationProvider.this.messages.getMessage("AbstractOauth2AuthenticationProvider.disabled", "User is disabled"));
             } else if (!user.isAccountNonExpired()) {
                 AbstractOauth2AuthenticationProvider.this.logger.debug("User account is expired");
-                throw new AccountExpiredException(AbstractOauth2AuthenticationProvider.this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.expired", "User account has expired"));
+                throw new AccountExpiredException(AbstractOauth2AuthenticationProvider.this.messages.getMessage("AbstractOauth2AuthenticationProvider.expired", "User account has expired"));
             }
         }
     }

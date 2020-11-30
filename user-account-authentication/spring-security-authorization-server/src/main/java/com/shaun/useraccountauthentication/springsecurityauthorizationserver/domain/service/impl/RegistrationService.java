@@ -7,6 +7,7 @@ import com.shaun.useraccountauthentication.springsecurityauthorizationserver.dom
 import com.shaun.useraccountauthentication.springsecurityauthorizationserver.domain.repository.UserConnectRepository;
 import com.shaun.useraccountauthentication.springsecurityauthorizationserver.domain.repository.UserRepository;
 import com.shaun.useraccountauthentication.springsecurityauthorizationserver.domain.service.IRegistrationService;
+import com.shaun.useraccountauthentication.springsecurityauthorizationserver.util.PassUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -53,19 +54,16 @@ public class RegistrationService implements IRegistrationService {
 
         User user = new User();
         user.setUsername(userId);
-        user.setPassword(bCryptPasswordEncoder.encode("admin"));
+        user.setPassword(bCryptPasswordEncoder.encode(PassUtil.generatePass(6)));
         userRepository.insert(user);
 
-        Authority authority = new Authority();
-        authority.setUsername(userId);
-        authority.setAuthority("ROLE_USER");
-        authorityRepository.insert(authority);
+        setDefaultAuthority(userId);
 
         UserConnect newUserConnect = new UserConnect();
         newUserConnect.setUserId(userId);
         newUserConnect.setProviderId(providerId);
         newUserConnect.setProviderUserId(providerUserId);
-        newUserConnect.setAccessToken(accessToken);
+        newUserConnect.setAccessToken("");
         userConnectRepository.insert(newUserConnect);
 
         result.putIfAbsent("name", newUserConnect.getUserId());
@@ -79,7 +77,10 @@ public class RegistrationService implements IRegistrationService {
 
     @Override
     public void setDefaultAuthority(String userName) {
-
+        Authority authority = new Authority();
+        authority.setUsername(userName);
+        authority.setAuthority("ROLE_USER");
+        authorityRepository.insert(authority);
     }
 
     private String findAvailableUserName(String userName_prefix) {

@@ -39,7 +39,7 @@ public class JdbcMutexConfig {
         return new DefaultLockRepository(dataSource);
     }
 
-    @Bean
+    @Bean("JdbcExpirableLockRegistry")
     ExpirableLockRegistry jdbcLockRegistry(LockRepository lockRepository) {
         return new JdbcLockRegistry(lockRepository);
     }

@@ -1,4 +1,4 @@
-package com.shaun.microservice.microserviceii.controller;
+package com.shaun.microservice.microserviceii.xfacade.rest;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

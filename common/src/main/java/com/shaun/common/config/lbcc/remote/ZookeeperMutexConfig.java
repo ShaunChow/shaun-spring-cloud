@@ -42,7 +42,7 @@ public class ZookeeperMutexConfig {
                 new RetryNTimes(retryCount, elapsedTimeMs));
     }
 
-    @Bean
+    @Bean("ZookeeperExpirableLockRegistry")
     ExpirableLockRegistry zookeeperLockRegistry(
             @Qualifier("LBCC-zookeeper-curatorframework") CuratorFramework client) {
         return new ZookeeperLockRegistry(client, rootPath);

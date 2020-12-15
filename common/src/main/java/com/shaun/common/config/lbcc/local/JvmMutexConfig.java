@@ -8,7 +8,7 @@ import org.springframework.integration.support.locks.ExpirableLockRegistry;
 @ConditionalOnExpression("'${setting.lock-based-concurrent-control.connect-type}'.equals('jvm')")
 @Configuration
 public class JvmMutexConfig {
-    @Bean
+    @Bean("JvmExpirableLockRegistry")
     ExpirableLockRegistry jvmLockRegistry() {
         return new JvmLockRegistry();
     }

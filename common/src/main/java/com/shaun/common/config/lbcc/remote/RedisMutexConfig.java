@@ -81,7 +81,7 @@ public class RedisMutexConfig {
         return new JedisConnectionFactory(redisConfig, clientConfig);
     }
 
-    @Bean
+    @Bean("RedisExpirableLockRegistry")
     ExpirableLockRegistry redisLockRegistry(
             @Qualifier("LBCC-redis-redisconnectionfactory") RedisConnectionFactory redisConnectionFactory
     ) {

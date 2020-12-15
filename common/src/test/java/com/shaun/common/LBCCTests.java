@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.integration.support.locks.ExpirableLockRegistry;
 import org.springframework.test.context.ActiveProfiles;
@@ -25,7 +26,7 @@ public class LBCCTests {
 
     private static int COUNT_MUTEX = 0;
 
-    private static int RUNNNER_COUNT = 1000;
+    private static int RUNNNER_COUNT = 10000;
 
     private static CountDownLatch countDownLatch_Mutex = new CountDownLatch(RUNNNER_COUNT);
 
@@ -37,7 +38,7 @@ public class LBCCTests {
 
     private static ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-    @Autowired
+    @Qualifier("JdbcExpirableLockRegistry")
     ExpirableLockRegistry expirableLockRegistry;
 
     @Test

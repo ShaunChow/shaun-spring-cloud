@@ -1,4 +1,4 @@
-package com.shaun.microservice.microserviceii.config;
+package com.shaun.microservice.microserviceii.application.config;
 
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.context.annotation.Configuration;

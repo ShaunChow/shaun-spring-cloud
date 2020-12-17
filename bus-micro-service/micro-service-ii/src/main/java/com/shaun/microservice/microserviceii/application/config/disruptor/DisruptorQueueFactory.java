@@ -15,6 +15,7 @@ public class DisruptorQueueFactory {
                 queueSize, Executors.defaultThreadFactory(),
                 isMoreProducer ? ProducerType.MULTI : ProducerType.SINGLE,
                 new SleepingWaitStrategy());
+        //_disruptor.setDefaultExceptionHandler(new DefaultExceptionHandler());
         _disruptor.handleEventsWithWorkerPool(consumers);
         return new DisruptorQueue(_disruptor);
     }
@@ -26,6 +27,7 @@ public class DisruptorQueueFactory {
                 queueSize, Executors.defaultThreadFactory(),
                 isMoreProducer ? ProducerType.MULTI : ProducerType.SINGLE,
                 new SleepingWaitStrategy());
+        //_disruptor.setDefaultExceptionHandler(new DefaultExceptionHandler());
         _disruptor.handleEventsWith(consumers);
         return new DisruptorQueue(_disruptor);
     }

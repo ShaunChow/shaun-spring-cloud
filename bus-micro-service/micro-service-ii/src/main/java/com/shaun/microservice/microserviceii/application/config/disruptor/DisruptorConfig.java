@@ -23,7 +23,6 @@ public class DisruptorConfig {
                         .values()
                         .toArray(new DisruptorConsumer[0]));
 
-
         return disruptorQueue;
     }
 }

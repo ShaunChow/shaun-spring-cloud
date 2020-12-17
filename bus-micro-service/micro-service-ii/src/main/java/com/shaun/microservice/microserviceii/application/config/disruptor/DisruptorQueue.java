@@ -16,7 +16,7 @@ public class DisruptorQueue<T> {
         this.disruptor.start();
     }
 
-    public void add(T t) {
+    public void post(T t) {
         if (t != null) {
             long sequence = this.ringBuffer.next();
 
@@ -29,14 +29,14 @@ public class DisruptorQueue<T> {
         }
     }
 
-    public void addAll(List<T> ts) {
+    public void post(List<T> ts) {
         if (ts != null) {
             Iterator<T> var2 = ts.iterator();
 
             while (var2.hasNext()) {
                 T t = var2.next();
                 if (t != null) {
-                    this.add(t);
+                    this.post(t);
                 }
             }
         }

@@ -15,7 +15,7 @@ public class EventBusConfig {
     private ApplicationContext applicationContext;
 
     @Bean
-    public AsyncEventBus tcpEventBusRegister() {
+    public AsyncEventBus eventBusRegister() {
 
         AsyncEventBus localEventBus = new AsyncEventBus(Executors.newFixedThreadPool(3));
 

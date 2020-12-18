@@ -1,6 +1,5 @@
 package com.shaun.microservice.microserviceii.application.config.disruptor;
 
-import com.shaun.microservice.microserviceii.application.config.eventbus.LocalEventListening;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +12,7 @@ public class DisruptorConfig {
     private ApplicationContext applicationContext;
 
     @Bean
-    public DisruptorQueue tcpEventBusRegister() {
+    public DisruptorQueue disruptorRegister() {
 
 
         DisruptorQueue disruptorQueue = DisruptorQueueFactory.getHandleEventsQueue(

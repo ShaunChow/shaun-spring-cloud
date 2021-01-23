@@ -19,6 +19,7 @@
     <modules>
         <module>micro-service-i</module>
         <module>micro-service-ii</module>
+        <module>saga-orchestration</module>
     </modules>
 
     <dependencies>
